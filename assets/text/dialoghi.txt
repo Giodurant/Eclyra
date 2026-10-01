@@ -38,6 +38,18 @@ Io sono qui dall'alba. Se aspetto ancora un po' mi metto a ballare dal nervoso.
 
 Quando avremo il nostro Elyon, la prima sfida sarà tra noi due. Promesso?
 
+@KAEL_LUNARIA?HA_ELYON
+Kael: Eccolo, il tuo primo Elyon! Si vede che ti ha già scelto.
+
+Te l'avevo promesso: la prima sfida è tra noi due.
+Non trattenerti, {GIOCATORE}. Io non lo farò!
+
+@KAEL_LUNARIA?SCONFITTO_KAEL_1
+Kael: Va bene, va bene... questa volta hai vinto tu.
+Ma è solo la prima pagina. La prossima la scrivo io!
+
+Il Bosco Verdalia, la Guardiana Lira, il Sigillo Verde... Ci vediamo lungo la strada.
+
 @LUNARIA_LINA
 Lina: Hai notato che le lucciole di Lumen sono più deboli quest'anno?
 Mia nonna dice che succedeva anche prima della Grande Quiete. Ma chissà cosa voleva dire.
@@ -63,6 +75,11 @@ Il professor Elian ti aspetta al laboratorio, a nord-est della piazza.
 
 Ricordati: un Esploratore del Lumen rispetta ogni creatura, anche quando lotta.
 
+@CASA_MAMMA?HA_ELYON
+Mamma: Oh, che creatura meravigliosa! Si vede che ti vuole bene.
+
+Venite qui, riposatevi un momento. Una tazza di tè e un po' di calma fanno miracoli.
+
 @CASA_LIBRI
 "Diario di un Esploratore", volume 3.
 "Gli Elyon non appartengono a nessuno. Scelgono di camminare accanto a noi."
@@ -83,7 +100,13 @@ Prof. Elian: Il Lumen non è semplicemente energia. È ciò che collega ogni cos
 Gli Elyon ne sono l'espressione più pura. Per questo un Esploratore deve imparare prima ad ascoltare, e solo dopo a lottare.
 
 Ah, {GIOCATORE}! Scusami, mi perdo sempre nei miei pensieri.
-Le capsule sono quasi pronte. Torna tra poco: il tuo primo Elyon ti sta aspettando.
+Le tre capsule sul tavolo sono pronte. Avvicinati e scegli il compagno che senti più vicino.
+
+@ELIAN_LAB?HA_ELYON
+Prof. Elian: Ottima scelta. Anzi, credo che sia stato lui a scegliere te.
+
+Prenditi cura del tuo Elyon e lui si prenderà cura di te.
+Se vuoi lasciare qualche Elyon al sicuro, usa il PC del laboratorio: è collegato al box.
 
 @LAB_ASSISTENTE
 Sora: Il professore lavora da settimane su queste misurazioni.
@@ -102,6 +125,9 @@ Sullo schermo scorre una mappa di Asterra. Sette punti lampeggiano, uno per regi
 @LAB_CAPSULE
 Tre capsule di Lumen riposano sul tavolo.
 Dentro, tre piccole luci si muovono come se ti stessero osservando.
+
+@LAB_CAPSULE?HA_ELYON
+Le capsule rimaste brillano piano. Aspettano altri Esploratori.
 
 @LAB_PC
 Il computer del laboratorio. C'è un promemoria:
@@ -160,13 +186,36 @@ Senza un Elyon al tuo fianco è troppo pericoloso: gli Elyon del bosco sono nerv
 
 Torna quando il professor Elian ti avrà affidato il tuo compagno.
 
+@ROUTE1_GUARDIANO?HA_ELYON
+Esploratore Dario: Vedo che ora hai un Elyon. Bene!
+Ma il professore ha chiesto di non far passare nessuno finché le misurazioni nel bosco non saranno finite.
+
+Allenati nell'erba alta, intanto. Gli Elyon selvatici di Route 1 sono un ottimo inizio.
+
 @ROUTE1_ALLENATORE_1
 Esploratore Teo: Gli Esploratori del Lumen si sfidano quando i loro sguardi si incrociano!
 ...Ah, non hai ancora un Elyon? Allora ti aspetto. La sfida è solo rimandata!
 
+@ROUTE1_ALLENATORE_1?HA_ELYON
+Esploratore Teo: I nostri sguardi si sono incrociati! Sai cosa vuol dire?
+
+Si lotta!
+
+@ROUTE1_ALLENATORE_1?SCONFITTO_ROUTE1_TEO
+Esploratore Teo: Che lotta! Il tuo Elyon si fida di te, si vede da come si muove.
+Io torno ad allenarmi nell'erba alta.
+
 @ROUTE1_ALLENATORE_2
 Esploratrice Nina: Mi sto allenando per affrontare la Guardiana Lira.
 Quando avrai un Elyon, mettimi alla prova. Non sarò gentile!
+
+@ROUTE1_ALLENATORE_2?HA_ELYON
+Esploratrice Nina: Un Elyon tutto nuovo, eh? Perfetto.
+Vediamo se sei pronto per la strada che porta a Verdan!
+
+@ROUTE1_ALLENATORE_2?SCONFITTO_ROUTE1_NINA
+Esploratrice Nina: Mi hai battuta... Devo rivedere la mia strategia prima di sfidare Lira.
+Grazie per la lezione, davvero.
 
 @ROUTE1_PESCATORE
 Pescatore Ugo: Shh... non spaventare i pesci.

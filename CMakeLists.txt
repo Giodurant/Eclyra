@@ -49,6 +49,9 @@ add_library(eclyra_core STATIC
   src/items.c
   src/dialogue.c
   src/partita.c
+  src/elyon.c
+  src/item_use.c
+  src/battle.c
   src/data/items_data.c
   src/data/types.c
   src/data/species_data.c
@@ -76,6 +79,9 @@ add_executable(eclyra
   src/dialogue_ui.c
   src/player.c
   src/world.c
+  src/ui_common.c
+  src/battle_ui.c
+  src/schermate.c
 )
 target_link_libraries(eclyra PRIVATE eclyra_core raylib)
 target_compile_options(eclyra PRIVATE ${ECLYRA_WARN})
@@ -111,3 +117,13 @@ add_executable(test_database tests/test_database.c)
 target_link_libraries(test_database PRIVATE eclyra_core)
 target_compile_options(test_database PRIVATE ${ECLYRA_WARN})
 add_test(NAME database COMMAND test_database)
+
+add_executable(test_elyon tests/test_elyon.c)
+target_link_libraries(test_elyon PRIVATE eclyra_core)
+target_compile_options(test_elyon PRIVATE ${ECLYRA_WARN})
+add_test(NAME elyon COMMAND test_elyon)
+
+add_executable(test_battle tests/test_battle.c)
+target_link_libraries(test_battle PRIVATE eclyra_core)
+target_compile_options(test_battle PRIVATE ${ECLYRA_WARN})
+add_test(NAME battle COMMAND test_battle)

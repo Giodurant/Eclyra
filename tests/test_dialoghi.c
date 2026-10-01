@@ -92,6 +92,18 @@ int main(int argc, char **argv) {
         for (int k = 0; k < m.numNpc; k++) {
             riferimenti++;
             if (!DialogoDb_Trova(&db, m.npc[k].dialogo, NULL)) { mancanti++; printf("  manca %s\n", m.npc[k].dialogo); }
+            /* ogni allenatore ha la variante di sfida (HA_ELYON) e quella dopo la vittoria */
+            const AllenatoreMappa *a = Map_AllenatoreDi(&m, m.npc[k].id);
+            if (a) {
+                Flags f;
+                Flags_Azzera(&f);
+                const VoceDialogo *base = DialogoDb_Trova(&db, m.npc[k].dialogo, &f);
+                Flags_Imposta(&f, "HA_ELYON");
+                const VoceDialogo *sfida = DialogoDb_Trova(&db, m.npc[k].dialogo, &f);
+                Flags_Imposta(&f, a->flag);
+                const VoceDialogo *dopo = DialogoDb_Trova(&db, m.npc[k].dialogo, &f);
+                VERIFICA(base && sfida && dopo && base != sfida && sfida != dopo);
+            }
         }
         for (int k = 0; k < m.numCartelli; k++) {
             riferimenti++;

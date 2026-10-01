@@ -22,6 +22,8 @@ typedef enum {
     TEX_LAB,
     TEX_INTERNI,
     TEX_NPC,
+    TEX_ELYON_FRONTE,   /* 640x640: griglia 10x10 di sprite 64x64, specie 1..100 */
+    TEX_ELYON_RETRO,
     TEX_COUNT
 } TexId;
 

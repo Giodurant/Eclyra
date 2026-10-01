@@ -1,5 +1,55 @@
 # Changelog
 
+## 0.4.0 — Fase 4 (lotta, cattura, crescita, squadra e box)
+
+Aggiunto
+- `elyon.c/h` (core): istanza di Elyon con IV 0–15, 10 nature, formule delle statistiche del
+  documento, curva XP floor(crescita·L³) senza overflow, level-up con HP in proporzione, amicizia,
+  mosse (apprendimento e sostituzione), evoluzione mai prima del livello definito, variante Lumen 1/256.
+  Squadra (max 6) e box 5×20 con aggiunta, deposito (mai squadra vuota), ritiro, compattazione, cura.
+- `battle.c/h` (core): motore di lotta a eventi. Ordine per priorità, velocità e spareggio casuale;
+  formula dei danni del documento con STAB 1.25, efficacia, critico 1.5 (6%, 12% per le mosse a critico
+  alto), casuale 0.90–1.00, meteo e abilità, minimo 1; stati (veleno 1/8, grave n/16, bruciatura 1/16
+  e ATK −20%, paralisi 25% e SPE ×0.5, sonno 1–3 turni, gelo 20% di scongelamento, confusione 1–3 turni
+  e 40% di autocolpo); boost −6..+6; meteo di 5 turni; tutti gli effetti di mossa del database
+  (stordimento, cura, radicamento, colpi multipli, contraccolpo, campo di tipo, riflessione, furia,
+  blocco del cambio, ignora boost/abilità, equilibrio...); abilità (moltiplicatori di tipo e stat con
+  condizioni, immunità di tipo e di stato, cure a fine turno, critico ridotto/alto, SCUDO LUMEN,
+  veleno su attacco, effetto di campo di Aurion ogni 3 turni); cambio, cambio forzato al KO, oggetti,
+  fuga, cattura solo dei selvatici (formula del documento, Core ×1/1.5/2.5/3.5, primordiale solo con
+  evento), XP divisa tra i partecipanti (×1.5 contro allenatori, NUCLEO CONDIVISO 50%), premio in
+  Lumen, interruzione narrativa di Vael a metà HP dell'ultimo Elyon, "dimenarsi" senza PP.
+- IA a quattro livelli: SIMPLE (mossa casuale valida), STANDARD (danno atteso × precisione, valore delle
+  mosse di stato, 15% di imprevedibilità), SMART (colpo da KO, cambio quando l'Elyon in campo cadrebbe),
+  BOSS (come SMART più 1–3 cure d'emergenza limitate).
+- `item_use.c/h` (core): effetto degli oggetti curativi, PP e rianimazione, condiviso da lotta e zaino.
+- Schermata di lotta: transizione, pedane e sfondo con meteo, riquadri con nome, livello, barra HP
+  animata, stato e XP; menu COMBATTI / ELYON / ZAINO / FUGA; mosse con PP, tipo, categoria ed efficacia;
+  animazioni di entrata, attacco, colpo, KO, lancio del Core con scosse e stelle, boost, livello;
+  richiesta di sostituzione della mossa; schermata di evoluzione (interrompibile con X).
+- Sprite procedurali originali dei 100 Elyon, fronte e retro 64×64 (`tools/genera_elyon.py`): forma
+  del corpo coerente in tutta la famiglia evolutiva, taglia per stadio, palette e tratti del tipo.
+- Gioco: scelta provvisoria dello starter dalle capsule del laboratorio (Lv 5, con 5 CORE e 2 ERBA
+  VITALE), incontri nell'erba alta della Route 1 (12% a passo, habitat ROUTE1), allenatori Teo e Nina
+  e prima sfida di Kael (contro lo starter in vantaggio, come da documento), testi prima/dopo la lotta,
+  la mamma cura la squadra, sconfitta = ritorno sicuro a casa con squadra curata e nessuna penalità.
+- Menu di gioco: ELYON (lista, riepilogo con statistiche/natura/abilità/XP/mosse, riordino), ZAINO
+  (uso degli oggetti con scelta dell'Elyon e della mossa), SCHEDA (nome, Lumen, tempo di gioco, Elyon,
+  Sigilli), PC del box (deposito e ritiro, 5 box da 20).
+- Formato mappe: direttive HABITAT, ALLENATORE (con segnaposto {STARTER}), CURATORE, PC, STARTER.
+- Debug F1–F4, F6–F8 (vedi README).
+- Test: `test_elyon` (3665 verifiche) e `test_battle` (20809 verifiche, tra cui 4000 lotte simulate
+  con scelte casuali e controllo degli invarianti, determinismo con seme fisso); nuovi controlli in
+  `test_mappe` e `test_dialoghi`; percorso automatico esteso con starter, lotta con Kael, incontro e
+  cattura, menu, nuova mossa, evoluzione e sconfitta.
+
+Modificato
+- Partita contiene la collezione (squadra e box); il tempo di gioco ora avanza.
+- Testo di Elian aggiornato per la scelta dalle capsule; varianti nuove per Kael, mamma, Elian,
+  capsule, guardiano e allenatori della Route 1.
+- I due PC del laboratorio aprono il box invece di mostrare un cartello.
+- Allenatori ROUTE1_TEO e ROUTE1_NINA aggiunti al generatore (non canonici, segnati come Fase 4).
+
 ## 0.3.0 — Fase 3 (database)
 
 Aggiunto

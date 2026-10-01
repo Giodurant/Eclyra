@@ -8,6 +8,7 @@ void Partita_Nuova(Partita *p, uint32_t seme) {
     Utils_StrCopy(p->nomeGiocatore, sizeof(p->nomeGiocatore), NOME_GIOCATORE_DEFAULT);
     Flags_Azzera(&p->flags);
     Inventario_Azzera(&p->inventario);
+    Collezione_Azzera(&p->collezione);
     /* si comincia in camera, al primo piano della casa del giocatore (vedi casa_giocatore.map) */
     Utils_StrCopy(p->mappa, sizeof(p->mappa), "casa_giocatore");
     p->x = -1;   /* -1 = usa lo SPAWN della mappa */

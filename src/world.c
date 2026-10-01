@@ -3,6 +3,7 @@
 #include "dialogue_ui.h"
 #include "graphics.h"
 #include "map_render.h"
+#include "data/encounters_data.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -112,6 +113,68 @@ static void AvviaWarp(World *w, const Warp *wp, int x, int y) {
     w->timerTransizione = PASSI_DISSOLVENZA;
 }
 
+void World_Messaggio(World *w, const char *testo) { MostraTesto(w, testo, ""); }
+
+static const char *STARTER_NOMI[3] = { "PYRIN", "AQUIL", "MOSSEN" };
+
+const char *World_Starter(const World *w) {
+    for (int i = 0; i < 3; i++)
+        if (Flags_Attivo(&w->partita->flags, TextFormat("STARTER_%s", STARTER_NOMI[i]))) return STARTER_NOMI[i];
+    return NULL;
+}
+
+static bool HaElyon(const World *w) {
+    return Flags_Attivo(&w->partita->flags, FLAG_HA_ELYON) && Collezione_NumSquadra(&w->partita->collezione) > 0;
+}
+
+/* Allenatore associato all'NPC, se la sfida e' ancora valida */
+static const TrainerData *SfidaDi(World *w, const Npc *n, const char **flag) {
+    const AllenatoreMappa *a = Map_AllenatoreDi(&w->mappa, n->def->id);
+    if (!a || !HaElyon(w) || Flags_Attivo(&w->partita->flags, a->flag)) return NULL;
+    if (Collezione_SquadraViva(&w->partita->collezione) == 0) return NULL;
+    char id[48];
+    const char *seg = strstr(a->allenatore, "{STARTER}");
+    if (seg) {
+        const char *st = World_Starter(w);
+        if (!st) return NULL;
+        snprintf(id, sizeof(id), "%.*s%s%s", (int)(seg - a->allenatore), a->allenatore, st, seg + 9);
+    } else {
+        snprintf(id, sizeof(id), "%s", a->allenatore);
+    }
+    *flag = a->flag;
+    return GetTrainer(id);
+}
+
+static void FineDialogo(World *w) {
+    if (w->lottaDopoDialogo) {
+        w->richiesta = RICH_ALLENATORE;
+        w->richAllenatore = w->lottaDopoDialogo;
+        Utils_StrCopy(w->richFlag, sizeof(w->richFlag), w->flagDopoDialogo);
+        w->lottaDopoDialogo = NULL;
+    } else if (w->curaDopoDialogo) {
+        w->curaDopoDialogo = false;
+        Collezione_CuraSquadra(&w->partita->collezione);
+        MostraTesto(w, "I tuoi Elyon sono di nuovo in piena forma!", "");
+    } else if (w->starterInAttesa) {
+        w->domandaStarter = true;
+        w->cursoreSiNo = 0;
+    }
+}
+
+static void ScegliStarter(World *w, int specie) {
+    Elyon e;
+    Elyon_Crea(&e, specie, 5, &w->rng);
+    Partita *p = w->partita;
+    Collezione_Aggiungi(&p->collezione, &e);
+    Flags_Imposta(&p->flags, FLAG_HA_ELYON);
+    Flags_Imposta(&p->flags, TextFormat("STARTER_%s", GetSpecies(specie)->nome));
+    /* provvisorio (Fase 4): nella Fase 5 sara' Elian a consegnare Core e cure nella scena dedicata */
+    Inventario_Aggiungi(&p->inventario, ITEM_CORE, 5);
+    Inventario_Aggiungi(&p->inventario, ITEM_ERBA_VITALE, 2);
+    MostraTesto(w, TextFormat("Hai ricevuto %s!\n\nIl professor Elian ti affida anche 5 CORE e 2 ERBA VITALE.",
+                              GetSpecies(specie)->nome), "");
+}
+
 static void Interagisci(World *w) {
     int x, y;
     Player_TileDavanti(&w->player, &x, &y);
@@ -121,6 +184,13 @@ static void Interagisci(World *w) {
         Npc_GuardaVerso(n, w->player.tx, w->player.ty);
         n->parlando = true;
         w->npcInDialogo = n;
+        const char *flag = NULL;
+        const TrainerData *t = SfidaDi(w, n, &flag);
+        if (t) {
+            w->lottaDopoDialogo = t;
+            Utils_StrCopy(w->flagDopoDialogo, sizeof(w->flagDopoDialogo), flag);
+        }
+        w->curaDopoDialogo = HaElyon(w) && strcmp(w->mappa.curatore, n->def->id) == 0;
         Dialogo_Avvia(&w->dialogo, w->db, n->def->dialogo, &w->partita->flags,
                       w->partita->nomeGiocatore, n->def->nome);
         DialogoUI_Impagina(&w->dialogo);
@@ -135,6 +205,19 @@ static void Interagisci(World *w) {
         else MostraTesto(w, TextFormat("Hai trovato %s!", it ? it->nome : "???"), "");
         return;
     }
+    if (Map_PcIn(&w->mappa, x, y)) {
+        if (HaElyon(w)) w->richiesta = RICH_PC;
+        else MostraTesto(w, "Il PC è collegato al box degli Elyon.\nPer ora non c'è nessun Elyon da gestire.", "");
+        return;
+    }
+    const StarterMappa *st = Map_StarterIn(&w->mappa, x, y);
+    if (st && !Flags_Attivo(&w->partita->flags, FLAG_HA_ELYON)) {
+        const SpeciesData *sp = GetSpecies(st->specie);
+        w->starterInAttesa = st->specie;
+        MostraTesto(w, TextFormat("Nella capsula riposa %s, un Elyon di tipo %s.\nVuoi sceglierlo come compagno?",
+                                  sp->nome, Type_Nome(sp->tipo1)), "");
+        return;
+    }
     const Cartello *c = Map_CartelloIn(&w->mappa, x, y);
     if (c) {
         Dialogo_Avvia(&w->dialogo, w->db, c->dialogo, &w->partita->flags, w->partita->nomeGiocatore, "");
@@ -143,7 +226,22 @@ static void Interagisci(World *w) {
 }
 
 bool World_Libero(const World *w) {
-    return !w->dialogo.attivo && w->transizione == TRANS_NESSUNA && !w->player.inMovimento;
+    return !w->dialogo.attivo && w->transizione == TRANS_NESSUNA && !w->player.inMovimento && !w->domandaStarter &&
+           w->richiesta == RICH_NESSUNA;
+}
+
+void World_DopoLotta(World *w, EsitoLotta esito) {
+    Partita *p = w->partita;
+    if (esito == ESITO_VITTORIA && w->richFlag[0]) Flags_Imposta(&p->flags, w->richFlag);
+    w->richFlag[0] = '\0';
+    w->richAllenatore = NULL;
+    w->richiesta = RICH_NESSUNA;
+    if (esito == ESITO_SCONFITTA) {
+        /* ritorno sicuro: a casa, squadra curata, nessuna penalita' */
+        Collezione_CuraSquadra(&p->collezione);
+        World_Teletrasporta(w, "casa_giocatore", -1, -1, DIR_GIU);
+        MostraTesto(w, "Sei tornato a casa di corsa...\n\nMamma: Riposatevi un po'. Ecco, i tuoi Elyon sono di nuovo in forze!", "");
+    }
 }
 
 void World_Aggiorna(World *w, const Input *in, float caratteriPerPasso) {
@@ -166,10 +264,22 @@ void World_Aggiorna(World *w, const Input *in, float caratteriPerPasso) {
         return;
     }
 
+    if (w->domandaStarter) {
+        if (in->suP || in->giuP) w->cursoreSiNo ^= 1;
+        if (in->conferma || in->indietro) {
+            int specie = w->starterInAttesa;
+            w->domandaStarter = false;
+            w->starterInAttesa = 0;
+            if (in->conferma && w->cursoreSiNo == 0) ScegliStarter(w, specie);
+        }
+        return;
+    }
+
     if (w->dialogo.attivo) {
         if (!Dialogo_Aggiorna(&w->dialogo, in->conferma || in->indietro, caratteriPerPasso)) {
             if (w->npcInDialogo) w->npcInDialogo->parlando = false;
             w->npcInDialogo = NULL;
+            FineDialogo(w);
         }
         return;
     }
@@ -189,6 +299,15 @@ void World_Aggiorna(World *w, const Input *in, float caratteriPerPasso) {
         p->x = w->player.tx; p->y = w->player.ty; p->dir = w->player.dir;
         const Warp *wp = Map_WarpIn(&w->mappa, w->player.tx, w->player.ty);
         if (wp && !wp->suUrto) AvviaWarp(w, wp, w->player.tx, w->player.ty);
+        else if (Map_Tile(&w->mappa, w->player.tx, w->player.ty) == T_ERBA_ALTA && w->mappa.habitat[0] && HaElyon(w) &&
+                 Collezione_SquadraViva(&p->collezione) > 0 && Rng_Range(&w->rng, 100) < PROBABILITA_INCONTRO) {
+            int specie, livello;
+            if (Lotta_GeneraIncontro(GetHabitat(w->mappa.habitat), &w->rng, &specie, &livello)) {
+                w->richiesta = RICH_SELVATICO;
+                w->richSpecie = specie;
+                w->richLivello = livello;
+            }
+        }
     }
     AggiornaCamera(w);
 }
@@ -231,6 +350,15 @@ void World_Disegna(const World *w) {
         Gfx_Testo(w->mappa.nome, 14, y + 6, COL_TESTO);
     }
     DialogoUI_Disegna(&w->dialogo, w->frame);
+    if (w->domandaStarter) {
+        const SpeciesData *sp = GetSpecies(w->starterInAttesa);
+        Gfx_Finestra(4, LOGICAL_H - 48, LOGICAL_W - 8, 44);
+        Gfx_Testo(TextFormat("Scegli %s come tuo primo Elyon?", sp ? sp->nome : "?"), 14, LOGICAL_H - 38, COL_TESTO);
+        Gfx_Finestra(LOGICAL_W - 64, LOGICAL_H - 92, 56, 36);
+        Gfx_Testo("SÌ", LOGICAL_W - 46, LOGICAL_H - 86, COL_TESTO);
+        Gfx_Testo("NO", LOGICAL_W - 46, LOGICAL_H - 72, COL_TESTO);
+        Gfx_Cursore(LOGICAL_W - 54, LOGICAL_H - 85 + w->cursoreSiNo * 14);
+    }
 
     if (w->transizione == TRANS_USCITA)
         Gfx_Dissolvenza(1.0f - (float)w->timerTransizione / PASSI_DISSOLVENZA);

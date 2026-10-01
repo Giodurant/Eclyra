@@ -2,8 +2,10 @@
 #include "game.h"
 #include "graphics.h"
 #include "raylib.h"
+#include "ui_common.h"
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
 
 static const char *VOCI_TITOLO[] = { "NUOVA PARTITA", "CONTINUA", "OPZIONI", "ESCI" };
@@ -21,6 +23,8 @@ static void AggiornaTestiOpzioni(Game *g) {
 bool Game_Init(Game *g) {
     *g = (Game){ 0 };
     if (!Gfx_Init("ECLYRA - Le Cronache dell'Equilibrio")) return false;
+    g->lotta = calloc(1, sizeof(BattleUI));
+    if (!g->lotta) return false;
     Rng_Init(&g->rng, (uint32_t)time(NULL));
     g->opzioni.velocitaTesto = TESTO_MEDIO;
 
@@ -42,6 +46,8 @@ bool Game_Init(Game *g) {
 
 void Game_Shutdown(Game *g) {
     DialogoDb_Libera(&g->dialoghi);
+    free(g->lotta);
+    g->lotta = NULL;
     Gfx_Shutdown();
 }
 
@@ -101,15 +107,80 @@ static float CaratteriPerPasso(const Game *g) {
     }
 }
 
+static void AvviaLottaSelvatica(Game *g, int specie, int livello) {
+    if (BattleUI_AvviaSelvatica(g->lotta, &g->partita, &g->world.rng, specie, livello)) g->scena = SCENA_LOTTA;
+    else g->world.richiesta = RICH_NESSUNA;
+}
+
+static void AvviaLottaAllenatore(Game *g, const TrainerData *t) {
+    if (t && BattleUI_AvviaAllenatore(g->lotta, &g->partita, &g->world.rng, t)) g->scena = SCENA_LOTTA;
+    else g->world.richiesta = RICH_NESSUNA;
+}
+
 #ifdef ECLYRA_DEBUG
+/* Tasti di debug (solo build Debug): F1 +1000 Lumen, F2 cura, F3 +1 livello al primo Elyon,
+ * F4 incontro selvatico, F6 tutti i Sigilli, F7 teletrasporto, F8 lotta con un boss (Lira) */
 static void DebugTasti(Game *g) {
-    if (IsKeyPressed(KEY_F7) && World_Libero(&g->world)) {
+    if (!World_Libero(&g->world)) return;
+    Partita *p = &g->partita;
+    Collezione *c = &p->collezione;
+    if (IsKeyPressed(KEY_F1)) {
+        Inventario_AggiungiLumen(&p->inventario, 1000);
+        World_Messaggio(&g->world, "[DEBUG] +1000 Lumen.");
+    }
+    if (IsKeyPressed(KEY_F2)) {
+        Collezione_CuraSquadra(c);
+        World_Messaggio(&g->world, "[DEBUG] Squadra curata.");
+    }
+    if (IsKeyPressed(KEY_F3) && Collezione_NumSquadra(c) > 0) {
+        Elyon *e = &c->squadra[0];
+        Elyon_AggiungiXp(e, Elyon_XpPerLivello(GetSpecies(e->specie), e->livello + 1) - e->xp);
+        int evo = Elyon_PuoEvolvere(e);
+        if (evo) Elyon_Evolvi(e, evo);
+        World_Messaggio(&g->world, TextFormat("[DEBUG] %s sale al livello %d.", Elyon_Nome(e), e->livello));
+    }
+    if (IsKeyPressed(KEY_F4)) {
+        if (Collezione_SquadraViva(c) == 0) World_Messaggio(&g->world, "[DEBUG] Serve almeno un Elyon in grado di lottare.");
+        else {
+            const HabitatData *h = GetHabitat(g->world.mappa.habitat[0] ? g->world.mappa.habitat : "ROUTE1");
+            int specie, livello;
+            if (Lotta_GeneraIncontro(h, &g->world.rng, &specie, &livello)) AvviaLottaSelvatica(g, specie, livello);
+        }
+    }
+    if (IsKeyPressed(KEY_F6)) {
+        for (int i = 1; i <= 7; i++) Flags_Imposta(&p->flags, TextFormat("SIGILLO_%d", i));
+        World_Messaggio(&g->world, "[DEBUG] Sette Sigilli impostati (solo flag: la storia arriva nelle fasi 5-6).");
+    }
+    if (IsKeyPressed(KEY_F7)) {
         /* F7: teletrasporto ciclico tra tutte le mappe (allo SPAWN di ciascuna) */
         g->debugMappa = (g->debugMappa + 1) % NUM_MAPPE_GIOCO;
         World_Teletrasporta(&g->world, MAPPE_GIOCO[g->debugMappa], -1, -1, DIR_GIU);
     }
+    if (IsKeyPressed(KEY_F8)) {
+        if (Collezione_SquadraViva(c) == 0) World_Messaggio(&g->world, "[DEBUG] Serve almeno un Elyon in grado di lottare.");
+        else AvviaLottaAllenatore(g, GetTrainer("GUARDIANA_LIRA"));
+    }
 }
 #endif
+
+static void GestisciRichiesta(Game *g) {
+    World *w = &g->world;
+    switch (w->richiesta) {
+    case RICH_SELVATICO:
+        AvviaLottaSelvatica(g, w->richSpecie, w->richLivello);
+        break;
+    case RICH_ALLENATORE:
+        AvviaLottaAllenatore(g, w->richAllenatore);
+        break;
+    case RICH_PC:
+        w->richiesta = RICH_NESSUNA;
+        Schermate_Apri(&g->schermata, SCH_PC, &g->partita);
+        g->schermataAperta = true;
+        break;
+    default:
+        break;
+    }
+}
 
 static void PassoMondo(Game *g) {
     Input *in = &g->input;
@@ -117,16 +188,20 @@ static void PassoMondo(Game *g) {
         if (in->conferma || in->indietro) g->avviso = NULL;
         return;
     }
-    if (g->zainoAperto) {
-        if (in->conferma || in->indietro || in->menu) g->zainoAperto = false;
+    if (g->schermataAperta) {
+        if (!Schermate_Aggiorna(&g->schermata, in)) g->schermataAperta = false;
         return;
     }
     if (g->menuGiocoAperto) {
         int scelta = Menu_Aggiorna(&g->menuGioco, in);
         if (scelta == -2 || scelta == 5 || in->menu) g->menuGiocoAperto = false;
-        else if (scelta == 1) g->zainoAperto = true;
+        else if (scelta >= 0 && scelta <= 2) {
+            static const TipoSchermata tipi[3] = { SCH_SQUADRA, SCH_ZAINO, SCH_SCHEDA };
+            Schermate_Apri(&g->schermata, tipi[scelta], &g->partita);
+            g->schermataAperta = true;
+        }
+        else if (scelta == 3) g->avviso = "Il salvataggio arriverà nella Fase 5 dello sviluppo.";
         else if (scelta == 4) { g->menuGiocoAperto = false; ApriOpzioni(g); }
-        else if (scelta >= 0) g->avviso = "Questa funzione arriverà in una fase successiva dello sviluppo.";
         return;
     }
     if ((in->menu || in->indietro) && World_Libero(&g->world)) {
@@ -136,8 +211,19 @@ static void PassoMondo(Game *g) {
     }
 #ifdef ECLYRA_DEBUG
     DebugTasti(g);
+    if (g->scena != SCENA_MONDO) return;
 #endif
     World_Aggiorna(&g->world, in, CaratteriPerPasso(g));
+    GestisciRichiesta(g);
+}
+
+static void PassoLotta(Game *g) {
+    BattleUI_Aggiorna(g->lotta, &g->input, CaratteriPerPasso(g));
+    if (BattleUI_Finita(g->lotta)) {
+        World_DopoLotta(&g->world, g->lotta->esito);
+        g->scena = SCENA_MONDO;
+        g->dissolvenza = 1.0f;
+    }
 }
 
 void Game_Passo(Game *g) {
@@ -146,6 +232,11 @@ void Game_Passo(Game *g) {
         case SCENA_TITOLO:  PassoTitolo(g); break;
         case SCENA_OPZIONI: PassoOpzioni(g); break;
         case SCENA_MONDO:   PassoMondo(g); break;
+        case SCENA_LOTTA:   PassoLotta(g); break;
+    }
+    if ((g->scena == SCENA_MONDO || g->scena == SCENA_LOTTA) && ++g->passiTempo >= 60) {
+        g->passiTempo = 0;
+        g->partita.secondiGioco++;
     }
     Input_ConsumaEventi(&g->input);
 }
@@ -215,34 +306,13 @@ static void DisegnaOpzioni(const Game *g) {
     Gfx_TestoCentrato("Frecce: cambia  -  Z: conferma  -  X: indietro", LOGICAL_W / 2, LOGICAL_H - 16, 10, COL_BIANCO_UI);
 }
 
-static void DisegnaZaino(const Game *g) {
-    const Inventario *inv = &g->partita.inventario;
-    Gfx_Finestra(20, 12, LOGICAL_W - 40, LOGICAL_H - 24);
-    Gfx_Testo("ZAINO", 32, 20, (Color){ 40, 88, 152, 255 });
-    Gfx_Testo(TextFormat("LUMEN: %d", inv->lumen), LOGICAL_W - 120, 20, COL_TESTO);
-    int y = 38, n = 0;
-    for (int id = 1; id < ITEM_ID_MAX; id++) {
-        if (inv->quantita[id] <= 0) continue;
-        const ItemData *it = GetItem(id);
-        if (!it) continue;
-        if (n < 8) {
-            Gfx_Testo(it->nome, 36, y, COL_TESTO);
-            Gfx_Testo(TextFormat("x%d", inv->quantita[id]), LOGICAL_W - 70, y, COL_TESTO);
-            y += 14;
-        }
-        n++;
-    }
-    if (n == 0) Gfx_Testo("Lo zaino è vuoto.", 36, y, (Color){ 140, 140, 150, 255 });
-    Gfx_Testo("Z / X: chiudi", 32, LOGICAL_H - 30, (Color){ 140, 140, 150, 255 });
-}
-
 static void DisegnaMondo(const Game *g) {
     World_Disegna(&g->world);
-    if (g->zainoAperto) { DisegnaZaino(g); return; }
+    if (g->schermataAperta) { Schermate_Disegna(&g->schermata); return; }
     if (g->menuGiocoAperto) Menu_Disegna(&g->menuGioco, LOGICAL_W - 92, 4, 88);
     if (g->avviso) {
         Gfx_Finestra(4, LOGICAL_H - 48, LOGICAL_W - 8, 44);
-        Gfx_Testo("Questa funzione arriverà in una fase\nsuccessiva dello sviluppo.", 14, LOGICAL_H - 38, COL_TESTO);
+        UI_TestoACapo(g->avviso, 14, LOGICAL_H - 38, LOGICAL_W - 30, 2, COL_TESTO);
     }
 }
 
@@ -252,6 +322,7 @@ void Game_Disegna(Game *g) {
         case SCENA_TITOLO:  DisegnaTitolo(g); break;
         case SCENA_OPZIONI: DisegnaOpzioni(g); break;
         case SCENA_MONDO:   DisegnaMondo(g); break;
+        case SCENA_LOTTA:   BattleUI_Disegna(g->lotta); break;
     }
     Gfx_Dissolvenza(g->dissolvenza);
     Gfx_FineFrame();

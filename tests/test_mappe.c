@@ -1,6 +1,8 @@
 /* test_mappe.c - Caricamento, raggiungibilita', porte e coordinate delle mappe.
  * Uso: test_mappe <cartella assets> */
 #include "map.h"
+#include "data/encounters_data.h"
+#include "data/trainers_data.h"
 #include "test_framework.h"
 #include <stdlib.h>
 #include <string.h>
@@ -165,6 +167,43 @@ int main(int argc, char **argv) {
     for (int k = 0; k < lab->numNpc; k++) haElian |= strcmp(lab->npc[k].id, "elian") == 0;
     for (int k = 0; k < lun->numNpc; k++) haKael |= strcmp(lun->npc[k].id, "kael") == 0;
     VERIFICA(haElian && haKael);
+
+    /* Fase 4: incontri, allenatori, curatore, PC e capsule degli starter */
+    VERIFICA(strcmp(r1->habitat, "ROUTE1") == 0 && GetHabitat(r1->habitat) != NULL);
+    VERIFICA(r1->numAllenatori == 2 && lun->numAllenatori == 1);
+    for (int i = 0; i < NUM_MAPPE_GIOCO; i++) {
+        const Map *m = &mappe[i];
+        if (m->habitat[0]) VERIFICA(GetHabitat(m->habitat) != NULL);
+        for (int k = 0; k < m->numAllenatori; k++) {
+            const char *id = m->allenatore[k].allenatore;
+            const char *seg = strstr(id, "{STARTER}");
+            if (!seg) { VERIFICA(GetTrainer(id) != NULL); continue; }
+            static const char *st[3] = { "PYRIN", "AQUIL", "MOSSEN" };
+            for (int j = 0; j < 3; j++) {
+                char vero[64];
+                snprintf(vero, sizeof(vero), "%.*s%s%s", (int)(seg - id), id, st[j], seg + 9);
+                VERIFICA(GetTrainer(vero) != NULL);
+            }
+        }
+        /* gli NPC allenatori devono essere raggiungibili dal giocatore (tile adiacente libera) */
+        for (int k = 0; k < m->numAllenatori; k++) VERIFICA(Map_AllenatoreDi(m, m->allenatore[k].npc) != NULL);
+    }
+    VERIFICA(lab->numStarter == 3 && lab->numPc == 2);
+    VERIFICA(lab->starter[0].specie == 1 && lab->starter[1].specie == 4 && lab->starter[2].specie == 7);
+    VERIFICA(Map_StarterIn(lab, 6, 5) != NULL && Map_StarterIn(lab, 6, 6) == NULL);
+    VERIFICA(Map_PcIn(lab, 1, 7) && !Map_PcIn(lab, 2, 7));
+    VERIFICA(!Map_Bloccata(lab, 6, 6));                 /* si sta davanti alle capsule */
+    VERIFICA(!Map_Bloccata(lab, 2, 7));                 /* e accanto al PC */
+    VERIFICA(strcmp(mappe[IndiceMappa("casa_giocatore")].curatore, "mamma") == 0);
+    /* direttive non valide */
+    {
+        static Map tm;
+        char e2[200];
+        VERIFICA(!Map_CaricaDaTesto(&tm, "x", "DIMENSIONI 2 2\nTILES\n..\n..\nALLENATORE fantasma X F\n", e2, sizeof(e2)));
+        VERIFICA(!Map_CaricaDaTesto(&tm, "x", "DIMENSIONI 2 2\nTILES\n..\n..\nSTARTER 0 0 NONESISTE\n", e2, sizeof(e2)));
+        VERIFICA(!Map_CaricaDaTesto(&tm, "x", "DIMENSIONI 2 2\nTILES\n..\n..\nPC 5 5\n", e2, sizeof(e2)));
+        VERIFICA(Map_CaricaDaTesto(&tm, "x", "DIMENSIONI 2 2\nTILES\n..\n..\nHABITAT ROUTE1\nPC 1 1\n", e2, sizeof(e2)));
+    }
 
     return FINE_TEST();
 }

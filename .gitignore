@@ -1,4 +1,5 @@
-build/
+build*/
 saves/*.sav
 *.png.tmp
 .DS_Store
+tools/__pycache__/

@@ -4,6 +4,7 @@
 #define ECLYRA_PARTITA_H
 
 #include "common.h"
+#include "elyon.h"
 #include "events.h"
 #include "items.h"
 #include "map.h"
@@ -13,6 +14,7 @@ typedef struct {
     char nomeGiocatore[16];
     Flags flags;
     Inventario inventario;
+    Collezione collezione;          /* squadra (6) + box (5x20) */
     char mappa[MAP_NOME_ID];
     int x, y;
     Direzione dir;

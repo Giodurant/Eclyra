@@ -16,6 +16,8 @@ static const char *FILE_TEXTURE[TEX_COUNT] = {
     "assets/tilesets/laboratorio.png",
     "assets/tilesets/interni.png",
     "assets/sprites/npc.png",
+    "assets/sprites/elyon_fronte.png",
+    "assets/sprites/elyon_retro.png",
 };
 
 static char cartellaAsset[1024];

@@ -2,7 +2,9 @@
 #ifndef ECLYRA_GAME_H
 #define ECLYRA_GAME_H
 
+#include "battle_ui.h"
 #include "input.h"
+#include "schermate.h"
 #include "menu.h"
 #include "utils.h"
 #include "dialogue.h"
@@ -10,10 +12,10 @@
 #include "world.h"
 #include <stdbool.h>
 
-#define ECLYRA_VERSIONE "0.3.0-fase3"
+#define ECLYRA_VERSIONE "0.4.0-fase4"
 #define PASSO_LOGICO (1.0f / 60.0f)
 
-typedef enum { SCENA_TITOLO, SCENA_OPZIONI, SCENA_MONDO } Scena;
+typedef enum { SCENA_TITOLO, SCENA_OPZIONI, SCENA_MONDO, SCENA_LOTTA } Scena;
 typedef enum { TESTO_LENTO, TESTO_MEDIO, TESTO_VELOCE } VelocitaTesto;
 
 typedef struct {
@@ -30,7 +32,10 @@ typedef struct {
     Partita partita;
     DialogoDb dialoghi;
     World world;
-    bool zainoAperto;
+    BattleUI *lotta;           /* allocata all'avvio (struttura grande) */
+    Schermate schermata;       /* squadra, zaino, scheda, PC */
+    bool schermataAperta;
+    int passiTempo;            /* per il tempo di gioco */
     int debugMappa;            /* F7: indice della prossima mappa di teletrasporto */
 
     Menu menuTitolo;

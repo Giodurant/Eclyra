@@ -16,6 +16,12 @@
  *   CARTELLO x y dialogo                testo leggibile premendo Z davanti alla tile
  *   OGGETTO x y idOggetto quantita flag oggetto raccoglibile (sparisce quando il flag e' attivo)
  *   SPAWN x y DIR                       punto di partenza della mappa
+ *   HABITAT ID                          tabella degli incontri nell'erba alta (encounters_data)
+ *   ALLENATORE npc ID_ALLENATORE flag   l'NPC sfida il giocatore (una volta: il flag segna la vittoria);
+ *                                       "{STARTER}" nell'ID diventa PYRIN / AQUIL / MOSSEN
+ *   CURATORE npc                        dopo il dialogo l'NPC cura la squadra
+ *   PC x y                              terminale del box degli Elyon
+ *   STARTER x y SPECIE                  capsula per scegliere il primo Elyon (provvisoria, Fase 4)
  */
 #ifndef ECLYRA_MAP_H
 #define ECLYRA_MAP_H
@@ -32,6 +38,9 @@
 #define MAP_MAX_OGGETTI 8
 #define MAP_NOME_ID 24
 #define DIALOGO_ID 32
+#define MAP_MAX_ALLENATORI 8
+#define MAP_MAX_PC 4
+#define MAP_MAX_STARTER 3
 
 typedef enum {
     /* esterni */
@@ -77,6 +86,17 @@ typedef struct {
 } OggettoMappa;
 
 typedef struct {
+    char npc[24];
+    char allenatore[40];
+    char flag[32];
+} AllenatoreMappa;
+
+typedef struct {
+    int x, y;
+    int specie;
+} StarterMappa;
+
+typedef struct {
     char id[MAP_NOME_ID];       /* nome del file senza estensione, es. "lunaria" */
     char nome[32];              /* nome mostrato, es. "LUNARIA" */
     TipoMappa tipo;
@@ -92,6 +112,14 @@ typedef struct {
     int numOggetti;
     int spawnX, spawnY;
     Direzione spawnDir;
+    char habitat[24];           /* "" = nessun incontro */
+    AllenatoreMappa allenatore[MAP_MAX_ALLENATORI];
+    int numAllenatori;
+    char curatore[24];          /* id NPC ("" = nessuno) */
+    int pcX[MAP_MAX_PC], pcY[MAP_MAX_PC];
+    int numPc;
+    StarterMappa starter[MAP_MAX_STARTER];
+    int numStarter;
 } Map;
 
 /* Dimensioni (in tile) degli edifici; la porta e' al centro della riga in basso */
@@ -114,6 +142,9 @@ const Warp *Map_WarpIn(const Map *m, int x, int y);
 void Map_DestinazioneWarp(const Warp *w, int x, int y, int *dx, int *dy);
 
 const Cartello *Map_CartelloIn(const Map *m, int x, int y);
+const AllenatoreMappa *Map_AllenatoreDi(const Map *m, const char *npcId);
+bool Map_PcIn(const Map *m, int x, int y);
+const StarterMappa *Map_StarterIn(const Map *m, int x, int y);
 
 /* Elenco delle mappe esistenti (per test e teletrasporto di debug) */
 extern const char *const MAPPE_GIOCO[];

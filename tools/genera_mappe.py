@@ -104,6 +104,7 @@ def lunaria():
     m.add("CARTELLO 13 22 CARTELLO_CASA")
     m.add("CARTELLO 23 15 CARTELLO_PIAZZA")
     m.add("NPC kael 1 30 14 GIU FERMO KAEL_LUNARIA Kael")
+    m.add("ALLENATORE kael KAEL_INIZIALE_VS_{STARTER} SCONFITTO_KAEL_1")
     m.add("NPC lina 3 22 17 SINISTRA VAGA LUNARIA_LINA Lina")
     m.add("NPC bruno 4 13 12 GIU GIRA LUNARIA_BRUNO Bruno")
     m.add("NPC pip 6 29 27 DESTRA VAGA LUNARIA_PIP Pip")
@@ -150,6 +151,9 @@ def route1():
     m.add("NPC pescatore 4 46 12 DESTRA FERMO ROUTE1_PESCATORE Pescatore Ugo")
     m.add("NPC viaggiatore 5 12 22 SU VAGA ROUTE1_VIAGGIATORE Viaggiatore")
     m.add("OGGETTO 45 14 12 1 OGGETTO_R1_CORE")
+    m.add("HABITAT ROUTE1")
+    m.add("ALLENATORE allenatore1 ROUTE1_TEO SCONFITTO_ROUTE1_TEO")
+    m.add("ALLENATORE allenatore2 ROUTE1_NINA SCONFITTO_ROUTE1_NINA")
     m.salva()
 
 
@@ -175,6 +179,7 @@ def casa_giocatore():
     m.add("CARTELLO 8 2 CASA_TV")
     m.add("CARTELLO 1 3 CASA_LETTO")
     m.add("NPC mamma 2 8 5 SINISTRA FERMO CASA_MAMMA Mamma")
+    m.add("CURATORE mamma")
     m.salva()
 
 
@@ -203,8 +208,12 @@ def laboratorio():
     m.add("CARTELLO 5 5 LAB_CAPSULE")
     m.add("CARTELLO 6 5 LAB_CAPSULE")
     m.add("CARTELLO 7 5 LAB_CAPSULE")
-    m.add("CARTELLO 1 7 LAB_PC")
-    m.add("CARTELLO 12 7 LAB_PC")
+    m.add("PC 1 7")
+    m.add("PC 12 7")
+    # scelta provvisoria dello starter (la scena con Elian e Kael arriva nella Fase 5)
+    m.add("STARTER 5 5 PYRIN")
+    m.add("STARTER 6 5 AQUIL")
+    m.add("STARTER 7 5 MOSSEN")
     m.add("NPC elian 0 6 4 GIU FERMO ELIAN_LAB Prof. Elian")
     m.add("NPC assistente 4 10 6 SINISTRA VAGA LAB_ASSISTENTE Assistente Sora")
     m.salva()

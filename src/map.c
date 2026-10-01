@@ -1,5 +1,6 @@
 /* map.c - Dati e caricamento delle mappe (nessuna dipendenza da raylib). */
 #include "map.h"
+#include "data/species_data.h"
 #include "utils.h"
 #include <ctype.h>
 #include <stdio.h>
@@ -205,6 +206,29 @@ bool Map_CaricaDaTesto(Map *m, const char *id, const char *testo, char *errore, 
             char dir[16];
             if (sscanf(riga, "%*s %d %d %15s", &m->spawnX, &m->spawnY, dir) != 3 || !LeggiDir(dir, &m->spawnDir))
                 ERRORE("%s:%d: SPAWN x y DIR", id, numRiga);
+        } else if (strcmp(cmd, "HABITAT") == 0) {
+            if (sscanf(riga, "%*s %23s", m->habitat) != 1) ERRORE("%s:%d: HABITAT id", id, numRiga);
+        } else if (strcmp(cmd, "ALLENATORE") == 0) {
+            if (m->numAllenatori >= MAP_MAX_ALLENATORI) ERRORE("%s:%d: troppi allenatori", id, numRiga);
+            AllenatoreMappa *a = &m->allenatore[m->numAllenatori];
+            if (sscanf(riga, "%*s %23s %39s %31s", a->npc, a->allenatore, a->flag) != 3)
+                ERRORE("%s:%d: ALLENATORE npc id flag", id, numRiga);
+            m->numAllenatori++;
+        } else if (strcmp(cmd, "CURATORE") == 0) {
+            if (sscanf(riga, "%*s %23s", m->curatore) != 1) ERRORE("%s:%d: CURATORE npc", id, numRiga);
+        } else if (strcmp(cmd, "PC") == 0) {
+            if (m->numPc >= MAP_MAX_PC) ERRORE("%s:%d: troppi PC", id, numRiga);
+            if (sscanf(riga, "%*s %d %d", &m->pcX[m->numPc], &m->pcY[m->numPc]) != 2) ERRORE("%s:%d: PC x y", id, numRiga);
+            m->numPc++;
+        } else if (strcmp(cmd, "STARTER") == 0) {
+            if (m->numStarter >= MAP_MAX_STARTER) ERRORE("%s:%d: troppi starter", id, numRiga);
+            StarterMappa *st = &m->starter[m->numStarter];
+            char nome[24];
+            if (sscanf(riga, "%*s %d %d %23s", &st->x, &st->y, nome) != 3) ERRORE("%s:%d: STARTER x y SPECIE", id, numRiga);
+            const SpeciesData *sp = GetSpeciesByName(nome);
+            if (!sp) ERRORE("%s:%d: specie '%s' sconosciuta", id, numRiga, nome);
+            st->specie = sp->id;
+            m->numStarter++;
         } else {
             ERRORE("%s:%d: direttiva sconosciuta '%s'", id, numRiga, cmd);
         }
@@ -219,6 +243,14 @@ bool Map_CaricaDaTesto(Map *m, const char *id, const char *testo, char *errore, 
             !Map_Dentro(m, m->warp[i].x + m->warp[i].w - 1, m->warp[i].y + m->warp[i].h - 1))
             ERRORE("%s: warp %d fuori mappa", id, i);
     if (!Map_Dentro(m, m->spawnX, m->spawnY)) ERRORE("%s: SPAWN fuori mappa", id);
+    for (int i = 0; i < m->numAllenatori; i++) {
+        bool trovato = false;
+        for (int k = 0; k < m->numNpc; k++) if (strcmp(m->npc[k].id, m->allenatore[i].npc) == 0) trovato = true;
+        if (!trovato) ERRORE("%s: ALLENATORE per NPC inesistente '%s'", id, m->allenatore[i].npc);
+    }
+    for (int i = 0; i < m->numPc; i++) if (!Map_Dentro(m, m->pcX[i], m->pcY[i])) ERRORE("%s: PC fuori mappa", id);
+    for (int i = 0; i < m->numStarter; i++)
+        if (!Map_Dentro(m, m->starter[i].x, m->starter[i].y)) ERRORE("%s: STARTER fuori mappa", id);
     return true;
 }
 
@@ -233,4 +265,20 @@ bool Map_CaricaFile(Map *m, const char *cartella, const char *id, char *errore, 
     bool ok = Map_CaricaDaTesto(m, id, testo, errore, dimErrore);
     free(testo);
     return ok;
+}
+
+const AllenatoreMappa *Map_AllenatoreDi(const Map *m, const char *npcId) {
+    for (int i = 0; i < m->numAllenatori; i++)
+        if (strcmp(m->allenatore[i].npc, npcId) == 0) return &m->allenatore[i];
+    return NULL;
+}
+
+bool Map_PcIn(const Map *m, int x, int y) {
+    for (int i = 0; i < m->numPc; i++) if (m->pcX[i] == x && m->pcY[i] == y) return true;
+    return false;
+}
+
+const StarterMappa *Map_StarterIn(const Map *m, int x, int y) {
+    for (int i = 0; i < m->numStarter; i++) if (m->starter[i].x == x && m->starter[i].y == y) return &m->starter[i];
+    return NULL;
 }
