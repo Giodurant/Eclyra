@@ -1,0 +1,50 @@
+# ECLYRA - mappa lunaria (generata da tools/genera_mappe.py, modificabile)
+NOME LUNARIA
+TIPO ESTERNO
+DIMENSIONI 40 30
+TILES
+TTTTTTTTTTTTTTTTTT====TTTTTTTTTTTTTTTTTT
+TTTTTTTTTTTTTTTTTT====TTTTTTTTTTTTTTTTTT
+TT................====................TT
+TT..TT......TT...C====............TT..TT
+TT..TT......TT....====..***.......TT..TT
+TT................====................TT
+TT................====................TT
+TT....NNNNN.......====................TT
+TT....NNNNN.......====......LLLLLLL...TT
+TT....NNNNN.......====......LLLLLLL...TT
+TT....NNNNN.......====......LLLLLLL...TT
+TT......=.........====......LLLLLLL...TT
+TT......==============.....CLLLLLLL...TT
+TT.............=================......TT
+TT.**..........==========.............TT
+TT.**..........====**==C=.............TT
+TT.............====**====..........**.TT
+TT.............==========..........**.TT
+TT......HHHHH..==========.............TT
+TT......HHHHH.....====....KKKKK.......TT
+TT......HHHHH.....====....KKKKK.......TT
+TT......HHHHH.....====....KKKKK.......TT
+TT........=..C....====....KKKKK.......TT
+TT........===================.........TT
+TT.............................~~~~~..TT
+TT..TT.........................~~~~~..TT
+TT...........***..........**...~~~~~..TT
+TT....................................TT
+TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+SPAWN 10 22 GIU
+USCITA 18 0 4 1 route1 28 23 SU
+PORTA 31 12 laboratorio 7 7 SU
+PORTA 8 10 negozio_lunaria 5 5 SU
+PORTA 10 21 casa_giocatore 5 6 SU
+PORTA 28 22 casa_vicini 4 5 SU
+CARTELLO 17 3 CARTELLO_LUNARIA
+CARTELLO 27 12 CARTELLO_LAB
+CARTELLO 13 22 CARTELLO_CASA
+CARTELLO 23 15 CARTELLO_PIAZZA
+NPC kael 1 30 14 GIU FERMO KAEL_LUNARIA Kael
+NPC lina 3 22 17 SINISTRA VAGA LUNARIA_LINA Lina
+NPC bruno 4 13 12 GIU GIRA LUNARIA_BRUNO Bruno
+NPC pip 6 29 27 DESTRA VAGA LUNARIA_PIP Pip
+NPC giardiniera 2 5 15 DESTRA GIRA LUNARIA_GIARDINIERA Marta

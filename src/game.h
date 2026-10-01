@@ -5,10 +5,12 @@
 #include "input.h"
 #include "menu.h"
 #include "utils.h"
+#include "dialogue.h"
+#include "partita.h"
 #include "world.h"
 #include <stdbool.h>
 
-#define ECLYRA_VERSIONE "0.1.0-fase1"
+#define ECLYRA_VERSIONE "0.2.0-fase2"
 #define PASSO_LOGICO (1.0f / 60.0f)
 
 typedef enum { SCENA_TITOLO, SCENA_OPZIONI, SCENA_MONDO } Scena;
@@ -25,7 +27,11 @@ typedef struct {
     Input input;
     Opzioni opzioni;
     Rng rng;
+    Partita partita;
+    DialogoDb dialoghi;
     World world;
+    bool zainoAperto;
+    int debugMappa;            /* F7: indice della prossima mappa di teletrasporto */
 
     Menu menuTitolo;
     Menu menuOpzioni;

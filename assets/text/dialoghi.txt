@@ -1,0 +1,181 @@
+# ECLYRA - testi di dialoghi e cartelli
+#
+# @ID                 nuovo testo
+# @ID?FLAG            variante usata quando il FLAG e' attivo
+# Nome: ...           (prima riga, facoltativo) chi parla
+# riga vuota          nuova pagina
+# Segnaposto: {GIOCATORE} {RIVALE}
+
+# ------------------------------------------------------------------
+# LUNARIA - cartelli
+# ------------------------------------------------------------------
+@CARTELLO_LUNARIA
+LUNARIA
+"Dove la luce del Lumen tocca per prima la terra."
+
+A nord: ROUTE 1 - Sentiero dei Germogli.
+
+@CARTELLO_LAB
+LABORATORIO DI RICERCA SUL LUMEN
+Responsabile: Prof. Elian
+
+@CARTELLO_CASA
+Casa di {GIOCATORE}.
+Sulla cassetta delle lettere c'è un adesivo a forma di stella.
+
+@CARTELLO_PIAZZA
+PIAZZA DELLE SETTE LUCI
+Secondo la leggenda, i Custodi accendevano qui sette fiamme, una per ogni Sigillo.
+
+# ------------------------------------------------------------------
+# LUNARIA - abitanti
+# ------------------------------------------------------------------
+@KAEL_LUNARIA
+Kael: Ehi, {GIOCATORE}! Finalmente!
+Oggi il professor Elian consegna gli Elyon ai nuovi Esploratori.
+
+Io sono qui dall'alba. Se aspetto ancora un po' mi metto a ballare dal nervoso.
+
+Quando avremo il nostro Elyon, la prima sfida sarà tra noi due. Promesso?
+
+@LUNARIA_LINA
+Lina: Hai notato che le lucciole di Lumen sono più deboli quest'anno?
+Mia nonna dice che succedeva anche prima della Grande Quiete. Ma chissà cosa voleva dire.
+
+@LUNARIA_BRUNO
+Bruno: L'emporio aspetta un carico di Core dal porto di Marina.
+Senza Core non si possono accompagnare gli Elyon selvatici. È un ritardo che pesa a tutti.
+
+@LUNARIA_PIP
+Pip: Sto cercando di far saltare i sassi sullo stagno!
+Il record è di quattro salti. Una volta ne ho fatti cinque, ma nessuno mi ha visto...
+
+@LUNARIA_GIARDINIERA
+Marta: Questi fiori crescono solo dove il Lumen scorre forte.
+Se un giorno appassissero tutti insieme, vorrebbe dire che qualcosa di grosso non va.
+
+# ------------------------------------------------------------------
+# CASA DEL GIOCATORE
+# ------------------------------------------------------------------
+@CASA_MAMMA
+Mamma: Buongiorno, {GIOCATORE}! Oggi è il grande giorno, vero?
+Il professor Elian ti aspetta al laboratorio, a nord-est della piazza.
+
+Ricordati: un Esploratore del Lumen rispetta ogni creatura, anche quando lotta.
+
+@CASA_LIBRI
+"Diario di un Esploratore", volume 3.
+"Gli Elyon non appartengono a nessuno. Scelgono di camminare accanto a noi."
+
+@CASA_TV
+Alla TV parlano di strani cali di energia nelle miniere di Khar, nella regione di Arkas.
+Un portavoce dell'ORDINE NEXUS dice che "la situazione è sotto controllo".
+
+@CASA_LETTO
+Il tuo letto. È ancora caldo... ma oggi non c'è tempo per dormire!
+
+# ------------------------------------------------------------------
+# LABORATORIO
+# ------------------------------------------------------------------
+@ELIAN_LAB
+Prof. Elian: Il Lumen non è semplicemente energia. È ciò che collega ogni cosa vivente.
+
+Gli Elyon ne sono l'espressione più pura. Per questo un Esploratore deve imparare prima ad ascoltare, e solo dopo a lottare.
+
+Ah, {GIOCATORE}! Scusami, mi perdo sempre nei miei pensieri.
+Le capsule sono quasi pronte. Torna tra poco: il tuo primo Elyon ti sta aspettando.
+
+@LAB_ASSISTENTE
+Sora: Il professore lavora da settimane su queste misurazioni.
+I valori del Lumen calano piano piano in tutta Asterra. Nessuno sa ancora il perché.
+
+@LAB_LIBRI
+"Le sette porte" - Atlante dei Custodi.
+Le pagine parlano di Sigilli che "tengono chiuso ciò che non deve tornare".
+
+@LAB_MACCHINA
+Uno strumento di misura del Lumen. L'ago oscilla lentamente verso il basso.
+
+@LAB_MACCHINA_2
+Sullo schermo scorre una mappa di Asterra. Sette punti lampeggiano, uno per regione.
+
+@LAB_CAPSULE
+Tre capsule di Lumen riposano sul tavolo.
+Dentro, tre piccole luci si muovono come se ti stessero osservando.
+
+@LAB_PC
+Il computer del laboratorio. C'è un promemoria:
+"Richiedere permessi per lo scavo nelle rovine di Sahr. Chiedere a Lira del Sigillo Verde?"
+
+# ------------------------------------------------------------------
+# EMPORIO
+# ------------------------------------------------------------------
+@NEGOZIO_COMMESSO
+Commesso: Benvenuto all'Emporio di Lunaria!
+Gli scaffali sono un po' vuoti: i Core e le Erbe Vitali arrivano con il prossimo carico.
+
+Passa a trovarci quando sarai un Esploratore: avrò tutto quello che ti serve.
+
+@NEGOZIO_CLIENTE
+Cliente: Volevo comprare un Frutto Lumen per il mio Elyon, ma sono finiti.
+Speriamo che il carico arrivi presto.
+
+@NEGOZIO_SCAFFALE
+Scatole vuote con l'etichetta "CORE - prossimo arrivo".
+
+# ------------------------------------------------------------------
+# CASA DEI VICINI
+# ------------------------------------------------------------------
+@VICINI_NONNO
+Nonno Aldo: Quando ero giovane, a Lunaria si diceva che sotto Elys dormisse una creatura antica.
+La chiamavano Aurion. Una luce e un'ombra nello stesso corpo.
+
+Storie per spaventare i bambini, dicevano. Eppure i Custodi l'hanno scolpita ovunque...
+
+@VICINI_MIA
+Mia: Da grande voglio fare la Guardiana, come Lira di Verdan!
+Lei ha un Leafora bellissimo. Una volta mi ha salutato!
+
+@VICINI_LIBRI
+"Fiabe di Asterra". Un segnalibro è infilato alla pagina "Il bambino che parlava al Vuoto".
+
+@VICINI_TV
+Un programma di cucina. Oggi preparano la torta di bacche di Verdan.
+
+# ------------------------------------------------------------------
+# ROUTE 1
+# ------------------------------------------------------------------
+@CARTELLO_ROUTE1
+ROUTE 1 - SENTIERO DEI GERMOGLI
+Sud: Lunaria. Nord: Bosco Verdalia.
+Attenzione: Elyon selvatici nell'erba alta.
+
+@CARTELLO_BOSCO
+BOSCO VERDALIA
+Il sentiero è sorvegliato dagli Esploratori di Lunaria.
+
+@ROUTE1_GUARDIANO
+Esploratore Dario: Alt! Il Bosco Verdalia è oltre questo sentiero.
+Senza un Elyon al tuo fianco è troppo pericoloso: gli Elyon del bosco sono nervosi, ultimamente.
+
+Torna quando il professor Elian ti avrà affidato il tuo compagno.
+
+@ROUTE1_ALLENATORE_1
+Esploratore Teo: Gli Esploratori del Lumen si sfidano quando i loro sguardi si incrociano!
+...Ah, non hai ancora un Elyon? Allora ti aspetto. La sfida è solo rimandata!
+
+@ROUTE1_ALLENATORE_2
+Esploratrice Nina: Mi sto allenando per affrontare la Guardiana Lira.
+Quando avrai un Elyon, mettimi alla prova. Non sarò gentile!
+
+@ROUTE1_PESCATORE
+Pescatore Ugo: Shh... non spaventare i pesci.
+Prima ho visto qualcosa che luccicava tra l'erba, vicino al lago. Forse qualcuno l'ha perso.
+
+@ROUTE1_PESCATORE?OGGETTO_R1_CORE
+Pescatore Ugo: Allora era un Core, quello che luccicava! Tienilo pure.
+Quando avrai un Elyon, ti servirà più che a me.
+
+@ROUTE1_VIAGGIATORE
+Viaggiatore: Vengo da Ember, nella regione di Vulkar. Ci ho messo tre settimane a piedi!
+Laggiù i vulcani brontolano più del solito. Qui almeno l'aria profuma d'erba.

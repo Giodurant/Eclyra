@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.2.0 — Fase 2 (mappe, porte, NPC, dialoghi)
+
+Aggiunto
+- Mappe caricate da file di testo (`assets/maps/*.map`) con parser robusto: messaggi di errore con
+  riga e motivo, nessun crash su file malformati o mancanti.
+- Porte degli edifici (si attivano urtando la porta) e uscite ai bordi (si attivano arrivando sulla
+  tile), con dissolvenza in uscita/entrata e banner con il nome della zona.
+- Mappe: Lunaria 40×30 (casa 8,18 · laboratorio 7×5 in 28,8 · negozio 6,7 · piazza 19,15 · uscita 19,0
+  · casa dei vicini), Route 1 60×25 (entrata 30,24 · varco del Bosco 30,0 presidiato · 4 zone d'erba ·
+  lago a est · CORE in 45,14) e 4 interni collegati (casa, laboratorio, emporio, casa dei vicini).
+- 17 NPC (fermi, che si girano o che passeggiano entro un raggio), che si voltano verso il giocatore
+  quando ci si parla; tra questi il Prof. Elian nel laboratorio e Kael davanti al laboratorio.
+- Sistema di dialogo: testi in `assets/text/dialoghi.txt`, varianti in base ai flag (`@ID?FLAG`),
+  nome di chi parla, segnaposto {GIOCATORE}/{RIVALE}, testo progressivo con salto (Z/X),
+  a capo automatico e impaginazione su 3 righe, velocità dalle opzioni. 42 testi italiani.
+- Cartelli e oggetti ispezionabili negli interni.
+- Flag di gioco con nome, inventario e valuta Lumen; tabella oggetti completa (ID 1–15, 20–35).
+- Oggetti a terra raccoglibili (CORE sulla Route 1) e menu ZAINO funzionante (solo consultazione).
+- Pixel art segnaposto originale: casa blu, emporio, laboratorio, tileset interni (21 tile), 8 NPC.
+- Debug F7: teletrasporto ciclico tra le mappe (solo build Debug).
+- Test: `test_mappe` (caricamento, raggiungibilità di spawn/porte/NPC/cartelli/oggetti, destinazioni
+  valide e senza rimbalzo, collegamento di tutte le mappe, coordinate di design, parser con input
+  malformati) e `test_dialoghi` (varianti, pagine, segnaposto, salto, UTF-8, testi mancanti,
+  riferimenti dalle mappe).
+
+Modificato
+- La nuova partita comincia in casa del giocatore; la Lunaria provvisoria generata da codice è stata rimossa.
+- `eclyra_core` contiene ora mappe, flag, inventario, dialoghi e stato della partita (senza raylib).
+
 ## 0.1.0 — Fase 1 (scheletro)
 
 Aggiunto

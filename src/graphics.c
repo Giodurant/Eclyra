@@ -11,7 +11,16 @@ static const char *FILE_TEXTURE[TEX_COUNT] = {
     "assets/tilesets/albero.png",
     "assets/tilesets/casa.png",
     "assets/sprites/giocatore.png",
+    "assets/tilesets/casa_blu.png",
+    "assets/tilesets/negozio.png",
+    "assets/tilesets/laboratorio.png",
+    "assets/tilesets/interni.png",
+    "assets/sprites/npc.png",
 };
+
+static char cartellaAsset[1024];
+
+const char *Gfx_CartellaAsset(void) { return cartellaAsset; }
 
 /* Se un PNG manca il gioco non si blocca: usa una scacchiera magenta ben visibile */
 static Texture2D TextureSegnaposto(void) {
@@ -42,6 +51,9 @@ bool Gfx_Init(const char *titolo) {
     if (!IsWindowReady()) return false;
     SetWindowMinSize(LOGICAL_W, LOGICAL_H);
     SetExitKey(KEY_NULL);   /* Esc serve per "indietro", non per chiudere */
+
+    snprintf(cartellaAsset, sizeof(cartellaAsset), "%sassets", GetApplicationDirectory());
+    if (!DirectoryExists(cartellaAsset)) snprintf(cartellaAsset, sizeof(cartellaAsset), "assets");
 
     schermo = LoadRenderTexture(LOGICAL_W, LOGICAL_H);
     SetTextureFilter(schermo.texture, TEXTURE_FILTER_POINT);

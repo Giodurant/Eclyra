@@ -5,6 +5,9 @@
 #include "raylib.h"
 #include <stdbool.h>
 
+/* Cartella degli asset (accanto all'eseguibile, oppure ./assets) */
+const char *Gfx_CartellaAsset(void);
+
 #define LOGICAL_W 320
 #define LOGICAL_H 180
 #define TILE      16
@@ -14,6 +17,11 @@ typedef enum {
     TEX_ALBERO,
     TEX_CASA,
     TEX_GIOCATORE,
+    TEX_CASA_BLU,
+    TEX_NEGOZIO,
+    TEX_LAB,
+    TEX_INTERNI,
+    TEX_NPC,
     TEX_COUNT
 } TexId;
 

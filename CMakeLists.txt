@@ -44,6 +44,12 @@ endif()
 # Logica pura (senza raylib): compilata a parte per poterla testare
 add_library(eclyra_core STATIC
   src/utils.c
+  src/map.c
+  src/events.c
+  src/items.c
+  src/dialogue.c
+  src/partita.c
+  src/data/items_data.c
 )
 target_include_directories(eclyra_core PUBLIC src)
 target_compile_options(eclyra_core PRIVATE ${ECLYRA_WARN})
@@ -58,7 +64,9 @@ add_executable(eclyra
   src/graphics.c
   src/input.c
   src/menu.c
-  src/map.c
+  src/map_render.c
+  src/npc.c
+  src/dialogue_ui.c
   src/player.c
   src/world.c
 )
@@ -81,3 +89,13 @@ add_executable(test_utils tests/test_utils.c)
 target_link_libraries(test_utils PRIVATE eclyra_core)
 target_compile_options(test_utils PRIVATE ${ECLYRA_WARN})
 add_test(NAME utils COMMAND test_utils)
+
+add_executable(test_mappe tests/test_mappe.c)
+target_link_libraries(test_mappe PRIVATE eclyra_core)
+target_compile_options(test_mappe PRIVATE ${ECLYRA_WARN})
+add_test(NAME mappe COMMAND test_mappe ${CMAKE_SOURCE_DIR}/assets)
+
+add_executable(test_dialoghi tests/test_dialoghi.c)
+target_link_libraries(test_dialoghi PRIVATE eclyra_core)
+target_compile_options(test_dialoghi PRIVATE ${ECLYRA_WARN})
+add_test(NAME dialoghi COMMAND test_dialoghi ${CMAKE_SOURCE_DIR}/assets)

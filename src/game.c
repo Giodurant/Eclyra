@@ -31,13 +31,17 @@ bool Game_Init(Game *g) {
     Menu_Init(&g->menuOpzioni, VOCI_OPZIONI, 3);
     Menu_Init(&g->menuGioco, VOCI_GIOCO, 6);
 
+    char errore[200];
+    if (!DialogoDb_CaricaFile(&g->dialoghi, TextFormat("%s/text/dialoghi.txt", Gfx_CartellaAsset()), errore, sizeof(errore)))
+        TraceLog(LOG_WARNING, "ECLYRA: dialoghi non caricati (%s)", errore);
+
     g->scena = SCENA_TITOLO;
     g->dissolvenza = 1.0f;
     return true;
 }
 
 void Game_Shutdown(Game *g) {
-    (void)g;
+    DialogoDb_Libera(&g->dialoghi);
     Gfx_Shutdown();
 }
 
@@ -55,7 +59,8 @@ static void PassoTitolo(Game *g) {
     if (g->dissolvenza > 0.0f) return;
     switch (Menu_Aggiorna(&g->menuTitolo, &g->input)) {
         case 0:   /* NUOVA PARTITA */
-            World_Init(&g->world);
+            Partita_Nuova(&g->partita, Rng_Next(&g->rng));
+            World_Init(&g->world, &g->partita, &g->dialoghi);
             g->scena = SCENA_MONDO;
             g->dissolvenza = 1.0f;
             break;
@@ -88,25 +93,51 @@ static void PassoOpzioni(Game *g) {
     if (scelta == 2 || scelta == -2) g->scena = g->scenaPrimaOpzioni;
 }
 
+static float CaratteriPerPasso(const Game *g) {
+    switch (g->opzioni.velocitaTesto) {
+        case TESTO_LENTO:  return 0.25f;   /* 15 caratteri al secondo */
+        case TESTO_MEDIO:  return 0.6f;    /* 36 caratteri al secondo */
+        default:           return 2.0f;    /* quasi istantaneo */
+    }
+}
+
+#ifdef ECLYRA_DEBUG
+static void DebugTasti(Game *g) {
+    if (IsKeyPressed(KEY_F7) && World_Libero(&g->world)) {
+        /* F7: teletrasporto ciclico tra tutte le mappe (allo SPAWN di ciascuna) */
+        g->debugMappa = (g->debugMappa + 1) % NUM_MAPPE_GIOCO;
+        World_Teletrasporta(&g->world, MAPPE_GIOCO[g->debugMappa], -1, -1, DIR_GIU);
+    }
+}
+#endif
+
 static void PassoMondo(Game *g) {
     Input *in = &g->input;
     if (g->avviso) {
         if (in->conferma || in->indietro) g->avviso = NULL;
         return;
     }
+    if (g->zainoAperto) {
+        if (in->conferma || in->indietro || in->menu) g->zainoAperto = false;
+        return;
+    }
     if (g->menuGiocoAperto) {
         int scelta = Menu_Aggiorna(&g->menuGioco, in);
         if (scelta == -2 || scelta == 5 || in->menu) g->menuGiocoAperto = false;
+        else if (scelta == 1) g->zainoAperto = true;
         else if (scelta == 4) { g->menuGiocoAperto = false; ApriOpzioni(g); }
         else if (scelta >= 0) g->avviso = "Questa funzione arriverà in una fase successiva dello sviluppo.";
         return;
     }
-    if ((in->menu || in->indietro) && !g->world.player.inMovimento && !g->world.messaggio) {
+    if ((in->menu || in->indietro) && World_Libero(&g->world)) {
         g->menuGiocoAperto = true;
         g->menuGioco.cursore = 0;
         return;
     }
-    World_Aggiorna(&g->world, in);
+#ifdef ECLYRA_DEBUG
+    DebugTasti(g);
+#endif
+    World_Aggiorna(&g->world, in, CaratteriPerPasso(g));
 }
 
 void Game_Passo(Game *g) {
@@ -184,8 +215,30 @@ static void DisegnaOpzioni(const Game *g) {
     Gfx_TestoCentrato("Frecce: cambia  -  Z: conferma  -  X: indietro", LOGICAL_W / 2, LOGICAL_H - 16, 10, COL_BIANCO_UI);
 }
 
+static void DisegnaZaino(const Game *g) {
+    const Inventario *inv = &g->partita.inventario;
+    Gfx_Finestra(20, 12, LOGICAL_W - 40, LOGICAL_H - 24);
+    Gfx_Testo("ZAINO", 32, 20, (Color){ 40, 88, 152, 255 });
+    Gfx_Testo(TextFormat("LUMEN: %d", inv->lumen), LOGICAL_W - 120, 20, COL_TESTO);
+    int y = 38, n = 0;
+    for (int id = 1; id < ITEM_ID_MAX; id++) {
+        if (inv->quantita[id] <= 0) continue;
+        const ItemData *it = GetItem(id);
+        if (!it) continue;
+        if (n < 8) {
+            Gfx_Testo(it->nome, 36, y, COL_TESTO);
+            Gfx_Testo(TextFormat("x%d", inv->quantita[id]), LOGICAL_W - 70, y, COL_TESTO);
+            y += 14;
+        }
+        n++;
+    }
+    if (n == 0) Gfx_Testo("Lo zaino è vuoto.", 36, y, (Color){ 140, 140, 150, 255 });
+    Gfx_Testo("Z / X: chiudi", 32, LOGICAL_H - 30, (Color){ 140, 140, 150, 255 });
+}
+
 static void DisegnaMondo(const Game *g) {
     World_Disegna(&g->world);
+    if (g->zainoAperto) { DisegnaZaino(g); return; }
     if (g->menuGiocoAperto) Menu_Disegna(&g->menuGioco, LOGICAL_W - 92, 4, 88);
     if (g->avviso) {
         Gfx_Finestra(4, LOGICAL_H - 48, LOGICAL_W - 8, 44);

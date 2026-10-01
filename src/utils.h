@@ -27,4 +27,7 @@ int   Utils_DivSafe(int a, int b);
 /* Copia sicura di stringhe (termina sempre con '\0'). */
 void  Utils_StrCopy(char *dst, size_t dstSize, const char *src);
 
+/* Legge un intero file di testo; il chiamante libera con free(). NULL se non esiste. */
+char *Utils_LeggiFile(const char *percorso);
+
 #endif

@@ -1,6 +1,6 @@
 # PROJECT_STATE — ECLYRA
 
-Ultimo aggiornamento: Fase 1 completata (versione 0.1.0).
+Ultimo aggiornamento: Fase 2 completata (versione 0.2.0).
 
 ## Come riprendere il lavoro
 1. Leggere `ECLYRA_MASTER_PER_CLAUDE` (specifica) e questo file.
@@ -10,7 +10,7 @@ Ultimo aggiornamento: Fase 1 completata (versione 0.1.0).
 
 ## Piano di consegna
 - [x] **Fase 1** — scheletro C99/CMake/raylib, title, game loop, camera, player.
-- [ ] **Fase 2** — mappe da file, collisioni, porte e interni, transizioni, NPC, dialoghi
+- [x] **Fase 2** — mappe da file, collisioni, porte e interni, transizioni, NPC, dialoghi
       (testo progressivo con skip, velocità da opzioni), mappe Lunaria 40×30 e Route 1 60×25.
 - [ ] **Fase 3** — database 100 specie / 100 mosse / abilità 001–046 / oggetti, controlli di consistenza
       (12 tipi, matrice 12×12 testata, evoluzioni, riferimenti validi).
@@ -19,19 +19,30 @@ Ultimo aggiornamento: Fase 1 completata (versione 0.1.0).
 - [ ] **Fase 6** — 5 regioni, Guardiani, Nexus, Lega, boss, due finali.
 - [ ] **Fase 7** — postgame, pixel art definitiva, audio, rifinitura, packaging.
 
-## File (Fase 1)
+## File
 | File | Ruolo |
 |---|---|
-| `src/main.c` | avvio, test con screenshot (Debug) |
-| `src/game.c/h` | scene (titolo, opzioni, mondo), menu di gioco, passo fisso |
+| `src/main.c` | avvio, percorso automatico con screenshot (Debug) |
+| `src/game.c/h` | scene (titolo, opzioni, mondo), menu di gioco, zaino, debug F7, passo fisso |
 | `src/graphics.c/h` | finestra, render target 320×180, scala intera, texture, testo, finestre UI |
 | `src/input.c/h` | tastiera con eventi accumulati |
 | `src/menu.c/h` | menu verticale con voci disattivabili |
-| `src/map.c/h` | tile, collisioni, autotile sentiero/acqua, disegno in profondità, Lunaria provvisoria |
-| `src/player.c/h` | movimento a griglia e animazione |
-| `src/world.c/h` | mappa corrente, giocatore, camera, banner nome zona, messaggi dei cartelli |
-| `src/utils.c/h` | RNG xorshift32, clamp, divisione sicura, copia stringhe |
-| `tests/test_utils.c` | test unitari |
+| `src/map.c/h` | **core**: formato .map, parser, tile, collisioni, warp, cartelli, oggetti |
+| `src/map_render.c/h` | disegno esterni/interni, autotile, profondità di alberi ed edifici |
+| `src/npc.c/h` | NPC: movimento (fermo/gira/vaga), voltarsi, disegno |
+| `src/dialogue.c/h` | **core**: database testi, varianti con flag, segnaposto, testo progressivo |
+| `src/dialogue_ui.c/h` | a capo automatico, impaginazione, riquadro con nome |
+| `src/events.c/h` | **core**: flag di gioco con nome |
+| `src/items.c/h` | **core**: inventario e valuta |
+| `src/data/items_data.c/h` | **core**: tabella oggetti con ID stabili |
+| `src/partita.c/h` | **core**: stato persistente (futuro salvataggio), senza puntatori |
+| `src/player.c/h` | movimento a griglia, urti (per le porte), animazione |
+| `src/world.c/h` | mappa corrente, NPC, porte e transizioni, interazioni, camera |
+| `src/utils.c/h` | **core**: RNG, clamp, divisione sicura, stringhe, lettura file |
+| `assets/maps/*.map` | 6 mappe (generate da `tools/genera_mappe.py`, modificabili) |
+| `assets/text/dialoghi.txt` | 42 testi di dialoghi e cartelli |
+| `tools/genera_grafica_fase2.py` | pixel art di edifici, interni, NPC |
+| `tests/test_*.c` | test CTest (utils, mappe, dialoghi) |
 
 ## Decisioni prese
 - Tutto il disegno avviene su una render texture 320×180, scalata di un fattore intero.
@@ -39,11 +50,18 @@ Ultimo aggiornamento: Fase 1 completata (versione 0.1.0).
 - `eclyra_core` è una libreria senza raylib: lì andranno dati e regole di lotta, così i test
   non richiedono una finestra.
 - Esc non chiude la finestra (serve come "indietro"): si esce da ESCI o chiudendo la finestra.
+- Porte = warp "su urto" (la tile della porta e' bloccata); uscite = warp "all'arrivo". Le
+  destinazioni cadono una tile dentro la mappa di arrivo, mai su un'altra uscita (testato).
+- I testi stanno in un file unico; le varianti per i progressi della storia si scrivono `@ID?FLAG`.
 
 ## Problemi noti / da fare
-- Lunaria è provvisoria e generata da codice; nessuna porta funzionante (Fase 2).
-- Gli sprite usano la pixel art segnaposto originale: un solo modello di edificio (5×4).
-- Sprite del giocatore 16×24 (la specifica cita 16×16/24×24: da rivedere con l'arte definitiva).
-- Tasti debug F1–F8 non ancora presenti: arrivano con i sistemi a cui si riferiscono.
-- Audio assente.
-- Non verificata la compilazione su Windows/macOS: verificata su Linux (gcc, CMake 3.28).
+- Il varco nord della Route 1 verso il Bosco Verdalia è presidiato da un NPC: la mappa del Bosco
+  arriva con la Fase 5 (non esiste ancora un warp verso di essa).
+- Gli allenatori della Route 1 non lottano ancora (Fase 4); i loro testi lo spiegano in gioco.
+- Il commesso dell'emporio non vende ancora (negozio: Fase 4/5).
+- ELYON, SCHEDA e SALVA nel menu di gioco non sono implementati; ZAINO mostra solo il contenuto.
+- La creazione del personaggio (nome) è prevista nella Fase 5: per ora il nome è "ARI".
+- NPC "vaga": nel disegno l'ordine di profondità usa la tile di arrivo (piccoli artefatti possibili).
+- Grafica e sprite sono segnaposto originali (sprite 16×24); audio assente.
+- Il tasto F7 non è coperto dal test automatico (testato solo il teletrasporto via codice).
+- Verificata la compilazione solo su Linux (gcc 13, CMake 3.28); non su Windows/macOS.

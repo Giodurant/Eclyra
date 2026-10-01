@@ -34,7 +34,8 @@ static bool DirezionePremuta(const Input *in, Direzione *d) {
     return false;
 }
 
-bool Player_Aggiorna(Player *p, const Input *in, const Map *m) {
+EsitoPasso Player_Aggiorna(Player *p, const Input *in, FnTileBloccata bloccata, void *ctx,
+                           int *urtoX, int *urtoY) {
     if (p->inMovimento) {
         int v = p->corsa ? VEL_CORSA : VEL_CAMMINO;
         int gx = p->tx * TILE, gy = p->ty * TILE;
@@ -43,34 +44,38 @@ bool Player_Aggiorna(Player *p, const Input *in, const Map *m) {
         if (p->px == gx && p->py == gy) {
             p->inMovimento = false;
             p->passi++;
-            return true;
+            return PASSO_ARRIVATO;
         }
-        return false;
+        return PASSO_NIENTE;
     }
 
     Direzione d;
     if (!DirezionePremuta(in, &d)) {
         p->attesaGiro = 0;
-        return false;
+        return PASSO_NIENTE;
     }
     if (d != p->dir) {
         p->dir = d;
         p->attesaGiro = PASSI_GIRO;
-        return false;
+        return PASSO_NIENTE;
     }
     if (p->attesaGiro > 0) {
         p->attesaGiro--;
-        return false;
+        return PASSO_NIENTE;
     }
     int nx, ny;
     Player_TileDavanti(p, &nx, &ny);
-    if (!Map_Bloccata(m, nx, ny)) {
-        p->tx = nx;
-        p->ty = ny;
-        p->corsa = in->corsa;
-        p->inMovimento = true;
+    if (bloccata(ctx, nx, ny)) {
+        *urtoX = nx;
+        *urtoY = ny;
+        p->attesaGiro = PASSI_GIRO;   /* evita di ripetere l'urto a ogni passo logico */
+        return PASSO_URTO;
     }
-    return false;
+    p->tx = nx;
+    p->ty = ny;
+    p->corsa = in->corsa;
+    p->inMovimento = true;
+    return PASSO_NIENTE;
 }
 
 void Player_Disegna(const Player *p, int camX, int camY) {

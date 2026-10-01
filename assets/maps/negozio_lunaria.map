@@ -1,0 +1,20 @@
+# ECLYRA - mappa negozio_lunaria (generata da tools/genera_mappe.py, modificabile)
+NOME EMPORIO
+TIPO INTERNO
+DIMENSIONI 11 8
+TILES
+###########
+###########
+#7_7_7___p#
+#8_8_8____#
+#_____ccc_#
+#_________#
+#____x____#
+###########
+SPAWN 5 5 SU
+USCITA 5 6 1 1 lunaria 8 11 GIU
+CARTELLO 1 3 NEGOZIO_SCAFFALE
+CARTELLO 3 3 NEGOZIO_SCAFFALE
+CARTELLO 5 3 NEGOZIO_SCAFFALE
+NPC commesso 4 7 3 GIU FERMO NEGOZIO_COMMESSO Commesso
+NPC cliente 2 2 5 DESTRA GIRA NEGOZIO_CLIENTE Cliente

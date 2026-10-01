@@ -1,0 +1,40 @@
+# ECLYRA - mappa route1 (generata da tools/genera_mappe.py, modificabile)
+NOME ROUTE 1
+TIPO ESTERNO
+DIMENSIONI 60 25
+TILES
+TTTTTTTTTTTTTTTTTTTTTTTTTTTTTT=TTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+TTTTTTTTTTTTTTTTTTTTTTTTTTTTTT==TTTTTTTTTTTTTTTTTTTTTTTTTTTT
+TT............................====........................TT
+TT...........................C====.wwwwwwww...............TT
+TT......wwwwwwwwwww.......TT..====.wwwwwwww.**............TT
+TT......wwwwwwwwwww...........====.wwwwwwww.**............TT
+TT......wwwwwwwwwww...........====.wwwwwwww...............TT
+TT......wwwwwwwwwww...........====.wwwwwwww.....~~~~~~~~~.TT
+TT......wwwwwwwwwww...........====.wwwwwwww.....~~~~~~~~~.TT
+TT......wwwwwwwwwww...........====.............~~~~~~~~~~.TT
+TT..TT................============.............~~~~~~~~~~.TT
+TT....................============.............~~~~~~~~~~.TT
+TT....................============......TT.....~~~~~~~~~~.TT
+TT................TT..====.........***.........~~~~~~~~~~.TT
+TT....................====.....................~~~~~~~~~~.TT
+TT....wwwwwwwwww......====......................~~~~~~~~~.TT
+TT....wwwwwwwwww......==========................~~~~~~~~~.TT
+TT....wwwwwwwwww......==========....wwwwwwwww.............TT
+TT....wwwwwwwwww......==========....wwwwwwwww.............TT
+TT....wwwwwwwwww............====....wwwwwwwww.......TT....TT
+TT....wwwwwwwwww............====....wwwwwwwww.............TT
+TT..........................====....wwwwwwwww.............TT
+TT............***.........C.====..........................TT
+TTTTTTTTTTTTTTTTTTTTTTTTTTTT====TTTTTTTTTTTTTTTTTTTTTTTTTTTT
+TTTTTTTTTTTTTTTTTTTTTTTTTTTT====TTTTTTTTTTTTTTTTTTTTTTTTTTTT
+SPAWN 29 23 SU
+USCITA 28 24 4 1 lunaria 18 1 GIU
+CARTELLO 26 22 CARTELLO_ROUTE1
+CARTELLO 29 3 CARTELLO_BOSCO
+NPC guardiano 7 30 1 GIU FERMO ROUTE1_GUARDIANO Esploratore Dario
+NPC allenatore1 7 21 14 DESTRA GIRA ROUTE1_ALLENATORE_1 Esploratore Teo
+NPC allenatore2 3 34 7 SINISTRA GIRA ROUTE1_ALLENATORE_2 Esploratrice Nina
+NPC pescatore 4 46 12 DESTRA FERMO ROUTE1_PESCATORE Pescatore Ugo
+NPC viaggiatore 5 12 22 SU VAGA ROUTE1_VIAGGIATORE Viaggiatore
+OGGETTO 45 14 12 1 OGGETTO_R1_CORE

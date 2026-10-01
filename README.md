@@ -4,7 +4,7 @@ RPG 2D in pixel art con cattura di creature a turni (gli **Elyon**), ambientato 
 continente di **Asterra**. Scritto in **C99** con **raylib** e **CMake**.
 Tutti i contenuti (storia, creature, mosse, grafica) sono originali.
 
-Stato attuale: **Fase 1 di 7** — vedi `PROJECT_STATE.md` e `CHANGELOG.md`.
+Stato attuale: **Fase 2 di 7** — vedi `PROJECT_STATE.md` e `CHANGELOG.md`.
 
 ## Requisiti
 
@@ -43,6 +43,14 @@ ctest --test-dir build --output-on-failure
 | Z / Invio | Conferma, interagisci |
 | X / Esc | Indietro, apre il menu di gioco |
 | M | Menu di gioco |
+| F7 (solo Debug) | Teletrasporto ciclico tra tutte le mappe |
+
+## Modificare mappe e testi
+
+- Le mappe sono file di testo in `assets/maps/*.map` (formato descritto in `src/map.h`).
+  `tools/genera_mappe.py` le rigenera da zero (sovrascrive le modifiche a mano).
+- Dialoghi e cartelli sono in `assets/text/dialoghi.txt` (formato descritto in testa al file).
+- Dopo ogni modifica: `ctest --test-dir build` controlla raggiungibilità, porte e testi mancanti.
 
 ## Struttura
 
@@ -51,7 +59,7 @@ src/            codice del gioco (un modulo per file .c/.h)
 src/data/       database di specie, mosse, abilità, oggetti (dalla Fase 3)
 assets/         sprite, tileset, mappe, interfaccia, audio, font
 tests/          test automatici (CTest)
-tools/          script per generare la pixel art segnaposto
+tools/          script per generare pixel art segnaposto e mappe
 saves/          salvataggi (dalla fase del sistema di salvataggio)
 ```
 

@@ -1,0 +1,19 @@
+# ECLYRA - mappa casa_vicini (generata da tools/genera_mappe.py, modificabile)
+NOME CASA DEI VICINI
+TIPO INTERNO
+DIMENSIONI 10 8
+TILES
+##########
+##########
+#v__1__3p#
+#___2__4_#
+#__hoh___#
+#________#
+#___x____#
+##########
+SPAWN 4 5 SU
+USCITA 4 6 1 1 lunaria 28 23 GIU
+CARTELLO 7 3 VICINI_LIBRI
+CARTELLO 1 2 VICINI_TV
+NPC nonno 5 6 5 SINISTRA FERMO VICINI_NONNO Nonno Aldo
+NPC mia 6 2 5 DESTRA VAGA VICINI_MIA Mia

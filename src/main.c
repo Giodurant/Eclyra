@@ -6,6 +6,7 @@
  */
 #include "game.h"
 #include "graphics.h"
+#include "items.h"
 #include <string.h>
 
 #ifdef ECLYRA_DEBUG
@@ -13,32 +14,77 @@ static void Scatta(const char *nome) {
     Gfx_EsportaFrame(nome);   /* la render texture logica 320x180 */
 }
 
+static void Attendi(Game *g, int passi) {
+    for (int i = 0; i < passi; i++) Game_Passo(g);
+}
+
+static void PremiConferma(Game *g) { g->input.conferma = true; Game_Passo(g); }
+
+/* Tiene premuta una direzione per un certo numero di passi logici */
+static void Tieni(Game *g, Direzione d, int passi) {
+    for (int i = 0; i < passi; i++) {
+        g->input.su = d == DIR_SU; g->input.giu = d == DIR_GIU;
+        g->input.sinistra = d == DIR_SINISTRA; g->input.destra = d == DIR_DESTRA;
+        Game_Passo(g);
+    }
+    g->input.su = g->input.giu = g->input.sinistra = g->input.destra = false;
+}
+
+static void Foto(Game *g, const char *nome) {
+    Game_Disegna(g);
+    Scatta(nome);
+}
+
 static int TestScreenshot(Game *g) {
     SetTargetFPS(0);
+    g->opzioni.velocitaTesto = TESTO_VELOCE;
     /* 1) titolo */
-    for (int i = 0; i < 90; i++) { Game_Passo(g); }
-    Game_Disegna(g);
-    Scatta("test_titolo.png");
-    /* 2) nuova partita */
-    g->input.conferma = true;
-    Game_Passo(g);
-    for (int i = 0; i < 40; i++) Game_Passo(g);
-    Game_Disegna(g);
-    Scatta("test_mondo.png");
-    /* 3) cammino verso nord per 6 tile e verso destra per 6 tile */
-    for (int i = 0; i < 6 * 16 + 8; i++) { g->input.su = true; Game_Passo(g); }
-    g->input.su = false;
-    for (int i = 0; i < 8 * 16 + 8; i++) { g->input.destra = true; Game_Passo(g); }
-    g->input.destra = false;
-    for (int i = 0; i < 160; i++) Game_Passo(g);
-    Game_Disegna(g);
-    Scatta("test_camminata.png");
-    /* 4) menu di gioco */
-    g->input.menu = true;
-    Game_Passo(g);
-    Game_Disegna(g);
-    Scatta("test_menu.png");
-    TraceLog(LOG_INFO, "ECLYRA: giocatore in tile (%d,%d)", g->world.player.tx, g->world.player.ty);
+    Attendi(g, 90);
+    Foto(g, "test_01_titolo.png");
+    /* 2) nuova partita: si comincia in casa */
+    PremiConferma(g);
+    Attendi(g, 40);
+    Foto(g, "test_02_casa.png");
+    /* 3) parlo con la mamma */
+    World_Teletrasporta(&g->world, "casa_giocatore", 7, 5, DIR_DESTRA);
+    PremiConferma(g);
+    Attendi(g, 60);
+    Foto(g, "test_03_dialogo_mamma.png");
+    while (g->world.dialogo.attivo) { PremiConferma(g); Attendi(g, 30); }
+    /* 4) esco dalla porta: il tappetino porta a Lunaria */
+    World_Teletrasporta(&g->world, "casa_giocatore", 5, 6, DIR_GIU);
+    Tieni(g, DIR_GIU, 20);
+    Attendi(g, 60);
+    Foto(g, "test_04_lunaria.png");
+    TraceLog(LOG_INFO, "ECLYRA TEST: dopo l'uscita sono in %s (%d,%d)", g->world.mappa.id, g->world.player.tx, g->world.player.ty);
+    /* 5) entro nel laboratorio urtando la porta e parlo con Elian */
+    World_Teletrasporta(&g->world, "lunaria", 31, 13, DIR_SU);
+    Tieni(g, DIR_SU, 4);
+    Attendi(g, 60);
+    TraceLog(LOG_INFO, "ECLYRA TEST: dopo la porta sono in %s (%d,%d)", g->world.mappa.id, g->world.player.tx, g->world.player.ty);
+    World_Teletrasporta(&g->world, "laboratorio", 7, 4, DIR_SINISTRA);
+    PremiConferma(g);
+    Attendi(g, 80);
+    Foto(g, "test_05_elian.png");
+    while (g->world.dialogo.attivo) { PremiConferma(g); Attendi(g, 30); }
+    /* 6) Route 1: raccolgo il CORE vicino al lago */
+    World_Teletrasporta(&g->world, "route1", 44, 14, DIR_DESTRA);
+    Attendi(g, 10);
+    PremiConferma(g);
+    Attendi(g, 40);
+    Foto(g, "test_06_core.png");
+    while (g->world.dialogo.attivo) { PremiConferma(g); Attendi(g, 30); }
+    TraceLog(LOG_INFO, "ECLYRA TEST: CORE nello zaino = %d", Inventario_Quantita(&g->partita.inventario, ITEM_CORE));
+    /* 7) Kael davanti al laboratorio e menu ZAINO */
+    World_Teletrasporta(&g->world, "lunaria", 30, 15, DIR_SU);
+    PremiConferma(g);
+    Attendi(g, 80);
+    Foto(g, "test_07_kael.png");
+    while (g->world.dialogo.attivo) { PremiConferma(g); Attendi(g, 30); }
+    g->input.menu = true; Game_Passo(g);
+    g->input.giuP = true; Game_Passo(g);
+    PremiConferma(g);
+    Foto(g, "test_08_zaino.png");
     return 0;
 }
 #endif

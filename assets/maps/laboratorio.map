@@ -1,0 +1,30 @@
+# ECLYRA - mappa laboratorio (generata da tools/genera_mappe.py, modificabile)
+NOME LABORATORIO
+TIPO INTERNO
+DIMENSIONI 14 10
+TILES
+##############
+##############
+#3355_____55p#
+#4466_____66_#
+#____________#
+#____ooo_____#
+#____________#
+#g__________g#
+#______x_____#
+##############
+SPAWN 7 7 SU
+USCITA 7 8 1 1 lunaria 31 13 GIU
+CARTELLO 1 3 LAB_LIBRI
+CARTELLO 2 3 LAB_LIBRI
+CARTELLO 3 3 LAB_MACCHINA
+CARTELLO 4 3 LAB_MACCHINA
+CARTELLO 10 3 LAB_MACCHINA_2
+CARTELLO 11 3 LAB_MACCHINA_2
+CARTELLO 5 5 LAB_CAPSULE
+CARTELLO 6 5 LAB_CAPSULE
+CARTELLO 7 5 LAB_CAPSULE
+CARTELLO 1 7 LAB_PC
+CARTELLO 12 7 LAB_PC
+NPC elian 0 6 4 GIU FERMO ELIAN_LAB Prof. Elian
+NPC assistente 4 10 6 SINISTRA VAGA LAB_ASSISTENTE Assistente Sora

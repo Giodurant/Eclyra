@@ -1,0 +1,20 @@
+# ECLYRA - mappa casa_giocatore (generata da tools/genera_mappe.py, modificabile)
+NOME CASA
+TIPO INTERNO
+DIMENSIONI 12 9
+TILES
+############
+############
+#1_3____v_p#
+#2_4_______#
+#___hooh___#
+#__________#
+#rr________#
+#____x_____#
+############
+SPAWN 2 4 GIU
+USCITA 5 7 1 1 lunaria 10 22 GIU
+CARTELLO 3 3 CASA_LIBRI
+CARTELLO 8 2 CASA_TV
+CARTELLO 1 3 CASA_LETTO
+NPC mamma 2 8 5 SINISTRA FERMO CASA_MAMMA Mamma

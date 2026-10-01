@@ -1,5 +1,7 @@
 /* utils.c */
 #include "utils.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 void Rng_Init(Rng *r, uint32_t seme) {
     r->stato = seme ? seme : 0x9E3779B9u;   /* lo stato non puo' essere zero */
@@ -46,4 +48,19 @@ void Utils_StrCopy(char *dst, size_t dstSize, const char *src) {
         for (; i + 1 < dstSize && src[i] != '\0'; i++) dst[i] = src[i];
     }
     dst[i] = '\0';
+}
+
+char *Utils_LeggiFile(const char *percorso) {
+    FILE *f = fopen(percorso, "rb");
+    if (!f) return NULL;
+    if (fseek(f, 0, SEEK_END) != 0) { fclose(f); return NULL; }
+    long n = ftell(f);
+    if (n < 0 || n > 16 * 1024 * 1024) { fclose(f); return NULL; }   /* limite di sicurezza */
+    rewind(f);
+    char *buf = (char *)malloc((size_t)n + 1);
+    if (!buf) { fclose(f); return NULL; }
+    size_t letti = fread(buf, 1, (size_t)n, f);
+    fclose(f);
+    buf[letti] = '\0';
+    return buf;
 }
