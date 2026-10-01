@@ -4,7 +4,7 @@ RPG 2D in pixel art con cattura di creature a turni (gli **Elyon**), ambientato 
 continente di **Asterra**. Scritto in **C99** con **raylib** e **CMake**.
 Tutti i contenuti (storia, creature, mosse, grafica) sono originali.
 
-Stato attuale: **Fase 2 di 7** — vedi `PROJECT_STATE.md` e `CHANGELOG.md`.
+Stato attuale: **Fase 3 di 7** — vedi `PROJECT_STATE.md` e `CHANGELOG.md`.
 
 ## Requisiti
 
@@ -52,11 +52,19 @@ ctest --test-dir build --output-on-failure
 - Dialoghi e cartelli sono in `assets/text/dialoghi.txt` (formato descritto in testa al file).
 - Dopo ogni modifica: `ctest --test-dir build` controlla raggiungibilità, porte e testi mancanti.
 
+## Database di gioco
+
+Specie, mosse, abilità, evoluzioni, allenatori e habitat sono generati in `src/data/`
+da `tools/genera_database.py`, che contiene le tabelle canoniche del documento di design.
+Per modificarli: cambia lo script, poi `python3 tools/genera_database.py` e ricompila.
+Una versione leggibile di tutti i dati è in `docs/BESTIARIO.md`.
+
 ## Struttura
 
 ```
 src/            codice del gioco (un modulo per file .c/.h)
-src/data/       database di specie, mosse, abilità, oggetti (dalla Fase 3)
+src/data/       database generato: tipi, specie, mosse, abilità, evoluzioni, allenatori, habitat, oggetti
+docs/           BESTIARIO.md (dati in forma leggibile)
 assets/         sprite, tileset, mappe, interfaccia, audio, font
 tests/          test automatici (CTest)
 tools/          script per generare pixel art segnaposto e mappe

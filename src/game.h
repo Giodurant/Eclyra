@@ -10,7 +10,7 @@
 #include "world.h"
 #include <stdbool.h>
 
-#define ECLYRA_VERSIONE "0.2.0-fase2"
+#define ECLYRA_VERSIONE "0.3.0-fase3"
 #define PASSO_LOGICO (1.0f / 60.0f)
 
 typedef enum { SCENA_TITOLO, SCENA_OPZIONI, SCENA_MONDO } Scena;

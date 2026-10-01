@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.3.0 — Fase 3 (database)
+
+Aggiunto
+- 12 tipi elementali e matrice 12×12 costruita dalle regole del documento (super efficacia,
+  resistenze, "super efficace e resistito = ×1", nessuna immunità); NEUTRO = TYPE_NONE.
+- 100 specie (ID 001–100) con statistiche canoniche, tipi, abilità, rarità, probabilità di cattura,
+  crescita, resa XP, learnset e una descrizione originale ciascuna; forme AURION VOID e ORIGINALE
+  come forme di #100 (senza ID aggiuntivo).
+- 100 mosse con effetti tradotti in campi strutturati (stato, stordimento, boost, cura, critico alto,
+  colpi multipli, contraccolpo, campo, riflessione, furia, ...), priorità e flag (solo Aurion,
+  solo evento, precisione automatica per le mosse su se stessi).
+- Abilità 001–046 in un'unica tabella, alias 034/036/041/045 risolti verso l'originale; abilità di
+  ogni specie secondo le eccezioni esplicite o il tipo primario.
+- 33 evoluzioni canoniche con API GetEvolution / GetPreEvolution / livello minimo.
+- 27 allenatori e boss (Kael iniziale e Campione nelle tre varianti, Nexus, 7 Guardiani con Sigilli,
+  Vael intermezzo con interruzione narrativa, Lega, Vael finale, Aurion fasi 1–2, post-game).
+- 8 habitat con le percentuali di incontro del documento.
+- API: GetSpecies, GetSpeciesByName, GetMove, GetMoveByName, GetAbility, GetAbilityResolved,
+  GetItem, GetTrainer, GetEvolution, GetHabitat, GetForm.
+- `tools/genera_database.py` (fonte unica, con validazioni) e `docs/BESTIARIO.md` leggibile.
+- Test `test_database`: 3782 verifiche su ID, nomi normalizzati, numeri autoritativi, matrice dei tipi
+  (confronto con le tabelle ricopiate nel test), mosse, evoluzioni, abilità, learnset di Pyrin,
+  allenatori, eccezioni di livello, habitat, oggetti.
+
 ## 0.2.0 — Fase 2 (mappe, porte, NPC, dialoghi)
 
 Aggiunto

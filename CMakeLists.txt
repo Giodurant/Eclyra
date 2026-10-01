@@ -50,6 +50,13 @@ add_library(eclyra_core STATIC
   src/dialogue.c
   src/partita.c
   src/data/items_data.c
+  src/data/types.c
+  src/data/species_data.c
+  src/data/moves_data.c
+  src/data/abilities_data.c
+  src/data/evolution_data.c
+  src/data/trainers_data.c
+  src/data/encounters_data.c
 )
 target_include_directories(eclyra_core PUBLIC src)
 target_compile_options(eclyra_core PRIVATE ${ECLYRA_WARN})
@@ -99,3 +106,8 @@ add_executable(test_dialoghi tests/test_dialoghi.c)
 target_link_libraries(test_dialoghi PRIVATE eclyra_core)
 target_compile_options(test_dialoghi PRIVATE ${ECLYRA_WARN})
 add_test(NAME dialoghi COMMAND test_dialoghi ${CMAKE_SOURCE_DIR}/assets)
+
+add_executable(test_database tests/test_database.c)
+target_link_libraries(test_database PRIVATE eclyra_core)
+target_compile_options(test_database PRIVATE ${ECLYRA_WARN})
+add_test(NAME database COMMAND test_database)
