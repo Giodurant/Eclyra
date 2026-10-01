@@ -1,0 +1,4 @@
+build/
+saves/*.sav
+*.png.tmp
+.DS_Store
