@@ -1,12 +1,19 @@
 # PROJECT_STATE — ECLYRA
 
-Ultimo aggiornamento: Fase 4 completata (versione 0.4.0).
+Ultimo aggiornamento: Fase 4 completata (versione 0.4.0). Proposta di nuova direzione artistica in revisione: `docs/DESIGN_SYSTEM.md`.
 
 ## Come riprendere il lavoro
 1. Leggere `ECLYRA_MASTER_PER_CLAUDE` (specifica) e questo file.
 2. `cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug && cmake --build build -j && ctest --test-dir build`.
 3. `./build/eclyra --screenshot-test` (dalla cartella in cui salvare i PNG) e controllare le immagini.
 4. Proseguire dalla prima voce non spuntata del piano.
+
+## Revisione artistica (in corso)
+- [x] Design System v1 proposta: `docs/DESIGN_SYSTEM.md`, mockup delle 18 schermate in `docs/design/mockup/`,
+      tavole in `docs/design/`, generatori in `tools/design/` (palette, font originale, UI, sprite, mondo).
+- [ ] Approvazione dell'utente (direzione, voci BESTIARIO e MAPPA nel menu, strategia per gli sprite finali).
+- [ ] Implementazione in C: `src/palette.h`, `ui_kit.c/h`, nuovo tileset con autotile, sprite in tutte le misure,
+      schermate aggiornate senza cambiare la logica.
 
 ## Piano di consegna
 - [x] **Fase 1** — scheletro C99/CMake/raylib, title, game loop, camera, player.
