@@ -101,3 +101,55 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+def tavola_starter():
+    """I 9 sprite di riferimento: tre linee evolutive, fronte 64x64, lato giocatore (specchiato),
+    icona 32x32 e fotogrammi di animazione."""
+    import mockups as M
+    righe = D.LINEE_STARTER
+    im = Image.new("RGBA", (3 * 70 + 6 + 3 * 36 + 8, 3 * 72 + 30), P.NOTTE[1])
+    ui.intestazione(im, 4, 3, "SPRITE DI RIFERIMENTO")
+    for r, linea in enumerate(righe):
+        y = 22 + r * 72
+        for c, nome in enumerate(linea):
+            spr = M.elyon(nome)
+            im.alpha_composite(spr, (6 + c * 70, y))
+            F.micro(im, nome, 6 + c * 70 + 2, y + 64, P.ORO[3])
+            ico = M.elyon(nome, scala=0.5)
+            im.alpha_composite(ico, (6 + 3 * 70 + 4 + c * 36, y + 16))
+        # fotogrammi: riposo, respiro, battito, affondo, colpito
+        base = linea[0]
+        x0 = 6 + 3 * 70 + 6 + 3 * 36
+    return im
+
+
+def tavola_animazione():
+    """Fotogrammi di PYRIN: riposo, respiro (+1 px alle parti alte), battito di ciglia,
+    affondo d'attacco (4 px in avanti), colpito (lampo bianco), lato giocatore (specchio)."""
+    f, m = D.SCHEDE["PYRIN"]()
+    idle = S.render(f, m)
+    respiro = S.render(f, m, frame=1)
+    battito = S.render(f, m, frame=2)
+    affondo = Image.new("RGBA", idle.size, (0, 0, 0, 0))
+    affondo.alpha_composite(idle, (-4, 0))
+    colpito = idle.copy()
+    a = colpito.load()
+    for y in range(colpito.height):
+        for x in range(colpito.width):
+            if a[x, y][3] > 200:
+                r_, g_, b_, al = a[x, y]
+                a[x, y] = (min(255, r_ + 150), min(255, g_ + 150), min(255, b_ + 150), al)
+    specchio = idle.transpose(Image.FLIP_LEFT_RIGHT)
+    fot = [idle, respiro, battito, affondo, colpito, specchio]
+    nomi = ["RIPOSO", "RESPIRO", "BATTITO", "AFFONDO", "COLPITO", "LATO GIOC."]
+    im = Image.new("RGBA", (6 * 70 + 6, 92), P.NOTTE[1])
+    for i, (s_, n) in enumerate(zip(fot, nomi)):
+        im.alpha_composite(s_, (6 + i * 70, 6))
+        F.micro(im, n, 6 + i * 70 + 2, 74, P.ORO[3])
+        F.micro(im, ["0", "1", "2", "3", "4", "-"][i], 6 + i * 70 + 60, 84, P.GRIGIO_UI)
+    return im
+
+
+if __name__ == "__main__" and len(sys.argv) > 1 and sys.argv[1] == "--starter":
+    pass

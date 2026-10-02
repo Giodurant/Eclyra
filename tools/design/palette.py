@@ -18,7 +18,7 @@ AZZURRO = [H("1B3F8F"), H("2E6FD0"), H("54A6F2"), H("A6DBFF"), H("E2F4FF")]
 ORO = [H("3D2709"), H("6E4A16"), H("A8772E"), H("E0B04A"), H("FFE596"), H("FFF8DE")]
 PERGAMENA = [H("8C7651"), H("C2AA7E"), H("E4D3AC"), H("F3E9CF"), H("FBF6E8")]
 INCHIOSTRO = H("1A1F3D")          # testo su pergamena
-CREMA = H("F3EAD2")               # testo su notte
+CREMA = H("F3EAD2")               # bianco caldo: testo su notte
 GRIGIO_UI = H("8E98BE")           # testo secondario su notte
 OMBRA_TESTO = H("05071A")
 
@@ -36,19 +36,20 @@ PELLE = [H("5A3424"), H("9A5E40"), H("D2936A"), H("F2C29A")]
 
 # --- 12 tipi: (scuro, base, chiaro). Mai usare solo il colore: ogni tipo ha anche il suo glifo.
 TIPI = {
-    "NEUTRO":  (H("5C5F70"), H("9EA1B0"), H("D6D8E2")),
-    "FIAMMA":  (H("8C2414"), H("E8542F"), H("FFB36B")),
-    "ACQUA":   (H("12407E"), H("2F86E0"), H("8FD0FF")),
-    "NATURA":  (H("1E5E2A"), H("4CAF4A"), H("A8E07A")),
-    "IMPULSO": (H("8A6410"), H("F2C230"), H("FFF09A")),
-    "VENTO":   (H("2A7E72"), H("6FD3BE"), H("D2FFF2")),
-    "ROCCIA":  (H("5A3E20"), H("A57A4A"), H("D9BC8C")),
-    "GELO":    (H("3A84A8"), H("9EE6FF"), H("F0FCFF")),
-    "OMBRA":   (H("1E1530"), H("4A3678"), H("8E76C8")),
-    "ASTRALE": (H("3A3290"), H("8E86FF"), H("DCD8FF")),
-    "TOSSICO": (H("5C1E70"), H("B04FD0"), H("E2A6F2")),
-    "PSICHE":  (H("8A1E52"), H("F0609E"), H("FFB8D6")),
-    "METALLO": (H("3E4858"), H("8E9CB0"), H("DCE4EE")),
+    # (scuro, base, accento chiaro) - coerenti con la direzione artistica definitiva
+    "NEUTRO":  (H("5C5F70"), H("9EA1B0"), H("E6E2D6")),
+    "FIAMMA":  (H("8C2414"), H("E8542F"), H("FFC24A")),   # rosso / arancio / giallo
+    "ACQUA":   (H("123E8A"), H("2F86E0"), H("7FE0F2")),   # blu / azzurro / ciano
+    "NATURA":  (H("1E5E2A"), H("4CAF4A"), H("A8E07A")),   # verde / verde chiaro
+    "IMPULSO": (H("8A6410"), H("F2C230"), H("FFF6A0")),   # giallo elettrico
+    "VENTO":   (H("3E7EA6"), H("8CCDEA"), H("E2F6FF")),   # azzurro chiaro
+    "ROCCIA":  (H("5A3E20"), H("A57A4A"), H("B8B2A4")),   # marrone / ocra / grigio
+    "GELO":    (H("1E9EBE"), H("B6ECFF"), H("FFFFFF")),   # ciano / azzurro / bianco
+    "OMBRA":   (H("0E0A18"), H("3E2E7A"), H("8A6CD2")),   # nero / indaco / viola
+    "ASTRALE": (H("1E2A78"), H("6E5AD8"), H("F0D27A")),   # blu profondo / viola / oro
+    "TOSSICO": (H("4E1A66"), H("9A3FC8"), H("A8E83A")),   # viola / verde acido
+    "PSICHE":  (H("6A1E6A"), H("E0409A"), H("FFA6D2")),   # viola / magenta / rosa
+    "METALLO": (H("3A4458"), H("8E9CB0"), H("BCD6F2")),   # grigio / acciaio / blu freddo
 }
 ORDINE_TIPI = ["NEUTRO", "FIAMMA", "ACQUA", "NATURA", "IMPULSO", "VENTO", "ROCCIA", "GELO",
                "OMBRA", "ASTRALE", "TOSSICO", "PSICHE", "METALLO"]

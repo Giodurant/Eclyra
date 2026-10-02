@@ -161,7 +161,8 @@ def render(forme, materiali, S=64, retro=False, frame=0, outline_scuro=None, omb
         intens = np.clip((n * LUCE).sum(-1), -1, 1)
         livello = np.select([intens > 0.88, intens > 0.55, intens > 0.12], [4, 3, 2], 1)
         if f.tipo == "macchia":
-            livello = np.where(m, ramp_idx, livello)
+            # i segni sul manto seguono la luce del corpo sotto, un tono piu' scuri: niente toppe piatte
+            livello = np.where(m, np.clip(ramp_idx - (ramp_idx >= 3), 1, 4), livello)
         sel = m & (f.z >= zbuf)
         mi = nomi.index(f.mat)
         # linea interna: dove questa forma copre una parte diversa, il bordo della parte coperta si scurisce

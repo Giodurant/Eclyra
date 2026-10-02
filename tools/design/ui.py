@@ -94,49 +94,45 @@ def gemma(im, cx, cy, pal=None):
 # ---------------------------------------------------------------- cornici
 
 def _bordo_oro(im, x, y, w, h):
+    """Bordo sottile: 1 px blu notte esterno + 1 px d'oro (piu' chiaro in alto a sinistra)"""
     hline(im, x, y, w, P.NOTTE[0]); hline(im, x, y + h - 1, w, P.NOTTE[0])
     vline(im, x, y, h, P.NOTTE[0]); vline(im, x + w - 1, y, h, P.NOTTE[0])
     hline(im, x + 1, y + 1, w - 2, P.ORO[3]); vline(im, x + 1, y + 1, h - 2, P.ORO[3])
-    hline(im, x + 1, y + h - 2, w - 2, P.ORO[1]); vline(im, x + w - 2, y + 1, h - 2, P.ORO[1])
-    px(im, x + 1, y + 1, P.ORO[4])
-    hline(im, x + 2, y + 2, w - 4, P.NOTTE[0]); hline(im, x + 2, y + h - 3, w - 4, P.NOTTE[0])
-    vline(im, x + 2, y + 2, h - 4, P.NOTTE[0]); vline(im, x + w - 3, y + 2, h - 4, P.NOTTE[0])
+    hline(im, x + 1, y + h - 2, w - 2, P.ORO[2]); vline(im, x + w - 2, y + 1, h - 2, P.ORO[2])
 
 
 def _angolo(im, x, y, sx, sy, gemme=True):
-    """Angolo decorato: castone d'oro a rombo con gemma di Lumen e due rebbi lungo i bordi"""
-    for k in range(3, 9):
-        px(im, x + k * sx, y + 3 * sy, P.ORO[3] if k < 7 else P.ORO[2])
-        px(im, x + 3 * sx, y + k * sy, P.ORO[3] if k < 7 else P.ORO[2])
-    if gemme:
-        cx, cy = x + 2 * sx, y + 2 * sy
-        for dy in range(-4, 5):
-            for dx in range(-4, 5):
-                d = abs(dx) + abs(dy)
-                if d == 4:
-                    px(im, cx + dx, cy + dy, P.ORO[4] if dx + dy < 0 else P.ORO[1])
-                elif d < 4:
-                    c = P.LUMEN[4] if dx + dy <= -2 else P.LUMEN[3] if dx + dy <= 0 else P.LUMEN[2] if d < 3 else P.LUMEN[1]
-                    px(im, cx + dx, cy + dy, c)
+    """Angolo: gemma di Lumen a rombo di 5 px appoggiata sullo spigolo d'oro"""
+    if not gemme:
+        return
+    cx, cy = x, y
+    for dy in range(-2, 3):
+        for dx in range(-2, 3):
+            d = abs(dx) + abs(dy)
+            if d == 2:
+                px(im, cx + dx, cy + dy, P.ORO[4] if dx + dy < 0 else P.ORO[1])
+            elif d < 2:
+                px(im, cx + dx, cy + dy, P.LUMEN[4] if dx + dy < 0 else P.LUMEN[3] if d == 0 else P.LUMEN[2])
 
 
 def cornice(im, x, y, w, h, stile="notte", gemme=True, titolo=None):
     """Pannello standard. stile: 'notte' (menu, HUD) o 'pergamena' (dialoghi, liste chiare)."""
     if stile == "pergamena":
-        gradiente_v(im, x + 3, y + 3, w - 6, h - 6, P.PERGAMENA[4], P.PERGAMENA[3])
+        gradiente_v(im, x + 2, y + 2, w - 4, h - 4, P.PERGAMENA[4], P.PERGAMENA[3])
         rnd = random.Random(w * 31 + h)
         for _ in range(w * h // 40):
-            px(im, x + 3 + rnd.randrange(max(1, w - 6)), y + 3 + rnd.randrange(max(1, h - 6)), P.con_alfa(P.PERGAMENA[1], 60))
-        hline(im, x + 3, y + 3, w - 6, P.PERGAMENA[4])
+            px(im, x + 2 + rnd.randrange(max(1, w - 4)), y + 2 + rnd.randrange(max(1, h - 4)), P.con_alfa(P.PERGAMENA[1], 50))
     else:
-        gradiente_v(im, x + 3, y + 3, w - 6, h - 6, P.NOTTE[2], P.NOTTE[1])
-        hline(im, x + 3, y + 3, w - 6, P.NOTTE[3])
+        gradiente_v(im, x + 2, y + 2, w - 4, h - 4, P.con_alfa(P.NOTTE[2], 240), P.con_alfa(P.NOTTE[1], 240))
+        hline(im, x + 2, y + 2, w - 4, P.NOTTE[3])
     _bordo_oro(im, x, y, w, h)
     if gemme and w >= 24 and h >= 18:
         _angolo(im, x + 1, y + 1, 1, 1)
         _angolo(im, x + w - 2, y + 1, -1, 1)
         _angolo(im, x + 1, y + h - 2, 1, -1)
         _angolo(im, x + w - 2, y + h - 2, -1, -1)
+    elif gemme and w >= 24:
+        _angolo(im, x + w // 2, y + 1, 1, 1)
     if titolo:
         intestazione(im, x + 8, y - 5, titolo)
 
@@ -147,8 +143,7 @@ def intestazione(im, x, y, titolo, larg=None):
     larg = larg or tw + 20
     rect(im, x, y, larg, 13, P.NOTTE[0])
     gradiente_v(im, x + 1, y + 1, larg - 2, 11, P.NOTTE[3], P.NOTTE[1])
-    hline(im, x + 1, y + 1, larg - 2, P.ORO[3]); hline(im, x + 1, y + 11, larg - 2, P.ORO[1])
-    vline(im, x + 1, y + 1, 11, P.ORO[3]); vline(im, x + larg - 2, y + 1, 11, P.ORO[1])
+    hline(im, x + 1, y + 12, larg - 2, P.ORO[2])
     cristallo(im, x + 6, y + 3, 7)
     titolo_oro(im, titolo, x + 12, y + 2)
     return larg

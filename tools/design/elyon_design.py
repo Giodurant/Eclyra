@@ -480,3 +480,124 @@ def aurion():
 
 
 SCHEDE.update({"LUMI": lumi, "SHADEK": shadek, "FROLI": froli, "LEAFORA": leafora, "AURION": aurion})
+
+
+# ================================================================ AQUILON (#005) - stadio intermedio
+def aquilon():
+    """Lontra slanciata: pinne piu' ampie di AQUIL, prime due stelle sulla coda (anticipa AQUARYS)"""
+    f = [
+        C(42, 47, 53, 38, 3.8, "pelo", z=1, r2=2.6),
+        Poly([(51, 40), (62, 27), (60, 38), (63, 47), (53, 43)], "pinna", z=2),
+        Macchia(58.5, 33, 0.9, 0.9, "stelle"), Macchia(59.5, 42, 0.9, 0.9, "stelle"),
+        C(45, 48, 46, 57, 3.0, "pelo", z=2),
+        C(24, 48, 23, 57, 2.8, "pelo", z=2),
+        E(35, 44, 13, 8.8, "pelo", z=5, tag=("su",)),
+        Macchia(30, 48, 8.5, 4.4, "ventre"),
+        E(44, 49, 5.8, 6, "pelo", z=7),
+        C(44, 52, 43.5, 57, 3.1, "pelo", z=8),
+        C(28, 47, 27, 57, 3.2, "pelo", z=8),
+        E(27, 57.2, 3.8, 1.7, "pinna", z=9), E(43.5, 57.3, 3.8, 1.7, "pinna", z=9),
+        Poly([(32, 37), (41, 26), (45, 38)], "pinna", z=4, tag=("su",)),
+        Poly([(25, 23), (34, 13), (34, 26)], "pinna", z=9, tag=("su",)),
+        E(22.5, 32, 11.5, 10, "pelo", z=10, tag=("su",)),
+        E(15, 37, 6.6, 4.4, "ventre", z=11, tag=("su",)),
+        E(9.8, 35, 1.9, 1.4, "pelo", z=12, tag=("su",)),
+        Poly([(12, 25), (5, 12), (18, 22)], "pinna", z=12, tag=("su",)),
+        Macchia(9.5, 17.5, 1, 1, "stelle"),
+        Poly([(10, 40), (2, 42.5), (10, 43)], "pinna", z=12, tag=("su",)),
+        Gemma(22.5, 23, 6, pal=P.AZZURRO, tag=("su", "viso")),
+        Occhio(17.5, 31.5, 3, IRIDE_MAREA, sguardo=-1, espressione="deciso", tag=("su",)),
+        Occhio(26.5, 30.5, 2, IRIDE_MAREA, sguardo=-1, espressione="deciso", tag=("su",)),
+        Bocca([(11, 38.6), (14, 39.8), (17, 39)], tag=("su",)),
+        Macchia(27, 28, 3, 2, "pinna", tag=("retro",)),
+    ]
+    return f, M_AQU
+
+
+# ================================================================ MOSSKA (#008) - stadio intermedio
+def mosska():
+    """Cinghiale di muschio: il manto copre tutto il dorso, spalle di pietra, due germogli, zanne piu' lunghe"""
+    f = [
+        C(45, 48, 54, 43, 2.8, "pelo", z=1),
+        E(55, 42, 3.2, 3, "muschio", z=1.5),
+        C(47, 49, 48, 57, 3.8, "pelo", z=2),
+        C(22, 48, 21, 57, 3.6, "pelo", z=2),
+        E(36, 44, 15.5, 10.5, "pelo", z=5, tag=("su",)),
+        E(39, 37, 13.5, 6.5, "muschio", z=6, tag=("su",)),
+        E(28, 37, 5, 3.6, "muschio", z=6.2, tag=("su",)),
+        E(44, 34.5, 2.6, 2, "pietra", z=6.5, tag=("su",)),
+        E(36, 33.5, 2, 1.5, "pietra", z=6.5, tag=("su",)),
+        C(41, 33, 42, 27, 0.9, "foglia", z=6.8, tag=("su",)),
+        Poly([(42, 28), (48, 23), (46, 30)], "foglia", z=6.9, tag=("su",)),
+        Macchia(30, 49, 9, 4, "zanna"),
+        E(46, 48, 7, 7.5, "pelo", z=7),
+        Poly([(40, 41), (51, 40), (52, 46), (42, 47)], "pietra", z=7.5),
+        C(46.5, 51, 45.5, 57.3, 3.8, "pelo", z=8),
+        C(28, 47, 27, 57.3, 3.9, "pelo", z=8),
+        E(27, 57.6, 4.5, 1.8, "pietra", z=9), E(45.5, 57.7, 4.5, 1.7, "pietra", z=9),
+        C(24, 24, 24.5, 18, 1.0, "foglia", z=9, tag=("su",)),
+        Poly([(24.5, 19), (32, 12), (30, 20)], "foglia", z=9.2, tag=("su",)),
+        Poly([(24, 19.5), (17, 14), (19, 21)], "foglia", z=9.2, tag=("su",)),
+        E(21, 33, 11.5, 10, "pelo", z=10, tag=("su",)),
+        E(13, 37, 7, 5, "pelo", z=11, tag=("su",)),
+        E(8, 36.5, 2.9, 2.6, "pietra", z=12, tag=("su",)),
+        E(7.3, 35.8, 0.8, 1.0, "pelo", z=12.5, tag=("su",)),
+        Poly([(11, 41), (6.5, 35), (13, 43)], "zanna", z=13, tag=("su",)),
+        Poly([(28, 27), (34, 23), (32, 29)], "pelo", z=9.5, tag=("su",)),
+        Poly([(15, 27), (11, 20), (19, 25)], "pelo", z=12, tag=("su",)),
+        Gemma(25, 23.5, 5, pal=GEMMA_BOSCO, tag=("su",)),
+        Occhio(16, 32, 3, IRIDE_BOSCO, sguardo=-1, espressione="deciso", tag=("su",)),
+        Occhio(24.5, 31.5, 2, IRIDE_BOSCO, sguardo=-1, espressione="deciso", tag=("su",)),
+        Bocca([(10, 41), (14, 41.6)], tag=("su",)),
+    ]
+    return f, M_MOS
+
+
+SCHEDE.update({"AQUILON": aquilon, "MOSSKA": mosska})
+LINEE_STARTER = [["PYRIN", "PYRION", "PYROVAR"], ["AQUIL", "AQUILON", "AQUARYS"], ["MOSSEN", "MOSSKA", "VERDANTOR"]]
+
+
+# ================================================================ taglia per stadio
+# Le forme base occupano meno spazio delle finali: la crescita si legge a colpo d'occhio.
+# La scala e' applicata alle FORME attorno al punto d'appoggio (32, 58): i pixel restano nitidi.
+TAGLIA_STADIO = {"PYRIN": 0.84, "AQUIL": 0.84, "MOSSEN": 0.84, "PYRION": 0.93, "AQUILON": 0.93, "MOSSKA": 0.93}
+
+
+def _scala_attorno(forme, s, ax=32.0, ay=58.0):
+    import copy
+    out = []
+    for f in forme:
+        g = copy.deepcopy(f)
+        k = g.k
+        for cx, cy in (("cx", "cy"), ("x1", "y1"), ("x2", "y2")):
+            if cx in k:
+                k[cx] = ax + (k[cx] - ax) * s
+            if cy in k:
+                k[cy] = ay + (k[cy] - ay) * s
+        if "base" in k:
+            k["base"] = ay + (k["base"] - ay) * s
+            k["h"] = k["h"] * s
+            k["w"] = k["w"] * s
+        for chiave in ("rx", "ry", "r2"):
+            if chiave in k:
+                k[chiave] *= s
+        if "r" in k and g.tipo != "occhio":
+            k["r"] *= s
+        if g.tipo == "gemma":
+            k["h"] = k["h"] * s
+        if "punti" in k:
+            k["punti"] = [(ax + (x - ax) * s, ay + (y - ay) * s) for x, y in k["punti"]]
+        out.append(g)
+    return out
+
+
+def _con_taglia(nome, fn):
+    def scheda():
+        f, m = fn()
+        s = TAGLIA_STADIO.get(nome, 1.0)
+        return (_scala_attorno(f, s), m) if s != 1.0 else (f, m)
+    return scheda
+
+
+for _n in list(TAGLIA_STADIO):
+    SCHEDE[_n] = _con_taglia(_n, SCHEDE[_n])

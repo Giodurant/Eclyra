@@ -913,7 +913,7 @@ REGIONI = [  # nome, sottotitolo, centro, colore base, chiaro
 ]
 
 
-def schermata_mappa():
+def schermata_mappa(visitate=None, giocatore=None):
     im = nuovo()
     for y in range(LH):
         for x in range(LW):
@@ -932,13 +932,15 @@ def schermata_mappa():
             if dmin < bordo and 18 < y < 172 and 22 < x < 304:
                 terra[(x, y)] = migliore
     for (x, y), i in terra.items():
-        _, _, _, base, chiaro = REGIONI[i]
+        nome_r, _, _, base, chiaro = REGIONI[i]
         c = base if (x + y * 3) % 7 else chiaro
         vic = [terra.get((x + dx, y + dy)) for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1))]
         if None in vic:
             c = P.PERGAMENA[3]
         elif any(v != i for v in vic):
             c = P.mix(base, (0, 0, 0, 255), 0.35)
+        if visitate is not None and nome_r not in visitate:
+            c = P.mix(c, P.NOTTE[2], 0.6 if (x + y) % 4 else 0.75)   # nebbia: regione non ancora esplorata
         px(im, x, y, c)
     for (x, y), i in terra.items():   # costa: spuma
         for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
@@ -994,7 +996,16 @@ def schermata_mappa():
                 if abs(dx) + abs(dy) <= 2:
                     px(im, x + dx, y + dy, P.ORO[3] if abs(dx) + abs(dy) == 2 else P.CREMA)
     ui.bagliore(im, 112, 140, 10, P.ORO[4], 120)
+    if giocatore:
+        gx, gy = giocatore
+        for r_ in (9, 6):
+            for k in range(0, 360, 12):
+                a = math.radians(k)
+                px(im, int(gx + math.cos(a) * r_), int(gy + math.sin(a) * r_ * 0.6), P.con_alfa(P.LUMEN[4], 220 if r_ == 6 else 120))
+        W.personaggio(im, gx - 8, gy - 22, W.ABITO_GIOCATORE)
     for (nome, sott, (x, y), base, chiaro) in REGIONI:
+        if visitate is not None and nome not in visitate:
+            sott = "???"
         w = max(F.larghezza(nome), F.larghezza_micro(sott.upper())) + 8
         lx, ly = x - w // 2, y + 5
         rect(im, lx, ly, w, 17, P.NOTTE[0])

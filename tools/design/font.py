@@ -151,7 +151,7 @@ def _maiuscola_accentata(base, accento):
     return [accento] + righe
 
 
-_g("À", _maiuscola_accentata("A", ".#..."))
+_g("À", _maiuscola_accentata("A", "#...."))
 _g("È", _maiuscola_accentata("E", ".#..."))
 _g("É", _maiuscola_accentata("E", "...#."))
 _g("Ì", _maiuscola_accentata("I", "#.."))

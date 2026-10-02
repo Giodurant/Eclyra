@@ -9,11 +9,22 @@ Ultimo aggiornamento: Fase 4 completata (versione 0.4.0). Proposta di nuova dire
 4. Proseguire dalla prima voce non spuntata del piano.
 
 ## Revisione artistica (in corso)
-- [x] Design System v1 proposta: `docs/DESIGN_SYSTEM.md`, mockup delle 18 schermate in `docs/design/mockup/`,
-      tavole in `docs/design/`, generatori in `tools/design/` (palette, font originale, UI, sprite, mondo).
-- [ ] Approvazione dell'utente (direzione, voci BESTIARIO e MAPPA nel menu, strategia per gli sprite finali).
-- [ ] Implementazione in C: `src/palette.h`, `ui_kit.c/h`, nuovo tileset con autotile, sprite in tutte le misure,
-      schermate aggiornate senza cambiare la logica.
+- [x] Design System v1 (non approvata), archiviata in `docs/design/archivio_v1/`.
+- [x] Direzione definitiva v2, solo documenti e mockup:
+  - `docs/ECLYRA_DESIGN_SYSTEM.md`, `docs/ECLYRA_ASSET_SPEC.md`, `docs/MULTIPLATFORM_ARCHITECTURE.md`;
+  - 12 mockup e 3 varianti (telefono, Steam Deck) in `docs/design/mockup_v2/`;
+  - 9 sprite di riferimento in `docs/design/tavola_starter.png`.
+  - Generatori: `tools/design/mockups_v2.py`, `tavole.py`.
+- [ ] Revisione e approvazione dell'utente. NON iniziare l'implementazione prima.
+- [ ] Prototipo iOS con raylib e backend SDL: è il rischio principale.
+- [ ] Implementazione secondo MULTIPLATFORM_ARCHITECTURE §10. Passi:
+  1. input astratto;
+  2. platform layer;
+  3. canvas variabile;
+  4. salvataggi v2;
+  5. UI kit;
+  6. schermate;
+  7. touch.
 
 ## Piano di consegna
 - [x] **Fase 1** — scheletro C99/CMake/raylib, title, game loop, camera, player.
