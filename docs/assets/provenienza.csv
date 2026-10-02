@@ -1,0 +1,13 @@
+file,origine,strumento,versione,sorgente_o_prompt,data,rifinitura,build_finale,note
+assets/sprites/elyon_fronte.png,procedurale,tools/genera_elyon.py,Fase 1-4,tools/genera_elyon.py,2026-10-01,nessuna,no,"grafica provvisoria, da sostituire con asset Design System v2"
+assets/sprites/elyon_retro.png,procedurale,tools/genera_elyon.py,Fase 1-4,tools/genera_elyon.py,2026-10-01,nessuna,no,"grafica provvisoria, da sostituire con asset Design System v2"
+assets/sprites/giocatore.png,procedurale,tools/genera_grafica_base.py,Fase 1-4,tools/genera_grafica_base.py,2026-10-01,nessuna,no,"grafica provvisoria, da sostituire con asset Design System v2"
+assets/sprites/npc.png,procedurale,tools/genera_grafica_fase2.py,Fase 1-4,tools/genera_grafica_fase2.py,2026-10-01,nessuna,no,"grafica provvisoria, da sostituire con asset Design System v2"
+assets/tilesets/albero.png,procedurale,tools/genera_grafica_base.py,Fase 1-4,tools/genera_grafica_base.py,2026-10-01,nessuna,no,"grafica provvisoria, da sostituire con asset Design System v2"
+assets/tilesets/casa.png,procedurale,tools/genera_grafica_base.py,Fase 1-4,tools/genera_grafica_base.py,2026-10-01,nessuna,no,"grafica provvisoria, da sostituire con asset Design System v2"
+assets/tilesets/casa_blu.png,procedurale,tools/genera_grafica_fase2.py,Fase 1-4,tools/genera_grafica_fase2.py,2026-10-01,nessuna,no,"grafica provvisoria, da sostituire con asset Design System v2"
+assets/tilesets/interni.png,procedurale,tools/genera_grafica_fase2.py,Fase 1-4,tools/genera_grafica_fase2.py,2026-10-01,nessuna,no,"grafica provvisoria, da sostituire con asset Design System v2"
+assets/tilesets/laboratorio.png,procedurale,tools/genera_grafica_fase2.py,Fase 1-4,tools/genera_grafica_fase2.py,2026-10-01,nessuna,no,"grafica provvisoria, da sostituire con asset Design System v2"
+assets/tilesets/negozio.png,procedurale,tools/genera_grafica_fase2.py,Fase 1-4,tools/genera_grafica_fase2.py,2026-10-01,nessuna,no,"grafica provvisoria, da sostituire con asset Design System v2"
+assets/tilesets/tileset.png,procedurale,tools/genera_grafica_base.py,Fase 1-4,tools/genera_grafica_base.py,2026-10-01,nessuna,no,"grafica provvisoria, da sostituire con asset Design System v2"
+prototypes/ios_sdl/assets/pyrin.png,procedurale,tools/design/elyon_design.py,v2,tools/design/elyon_design.py (PYRIN),2026-10-02,nessuna,no,sprite di riferimento della STYLE BIBLE

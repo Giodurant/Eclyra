@@ -1,0 +1,28 @@
+# Prototipo iOS: prova automatica su Linux (stessa strada SDL) e compilazione per il Simulatore iOS.
+# La prova su iPhone/iPad reale resta manuale: vedi prototypes/ios_sdl/PROTOTIPO_IOS.md
+name: prototipo-ios
+on:
+  push:
+    paths: ["prototypes/ios_sdl/**", ".github/workflows/prototipo_ios.yml"]
+  workflow_dispatch:
+
+jobs:
+  linux-sdl:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y libsdl2-dev libgles2-mesa-dev xvfb
+      - run: cmake -S prototypes/ios_sdl -B build && cmake --build build -j
+      - name: prova automatica
+        run: |
+          printf 'pcm.!default { type null }\n' > ~/.asoundrc
+          cd build && xvfb-run -a -s "-screen 0 1920x1080x24" ./eclyra_proto --selftest
+
+  ios-simulatore:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: progetto Xcode e build per il Simulatore (senza firma)
+        run: |
+          cd prototypes/ios_sdl
+          ./build_ios.sh

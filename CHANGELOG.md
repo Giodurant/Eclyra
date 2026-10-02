@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.4.1 — Design v2 approvato, prima lotta di Kael, prototipo iOS
+
+Aggiunto
+- `AI_INTRO`, l'IA introduttiva per la prima sfida di Kael (Lv5 invariato). Regole:
+  - niente stati sul giocatore;
+  - mosse super efficaci al 20%;
+  - esitazione calcolata a inizio lotta, in modo che ogni starter parta alla pari, più un elastico sugli HP;
+  - una sola grazia sul colpo da KO.
+- Nuovo messaggio di lotta: «X esita: non è ancora abituato ai comandi!».
+- `tests/test_bilanciamento.c`: simulazioni dei 3 starter, giocatore esperto e principiante, con obiettivi verificati da ctest.
+- Test delle eccezioni canoniche: Kain THORVAN Lv26 (evolve al 32), Nexus VENOROK Lv26 (evolve al 29).
+- `prototypes/ios_sdl/`: prototipo tecnico iOS con raylib 5.5 e backend SDL2:
+  - canvas a scala intera, azioni di input, touch, controller, audio in streaming;
+  - pausa e ripresa, salvataggio atomico con CRC;
+  - prova automatica (`--selftest`, o A+B tenuti sul dispositivo);
+  - progetto Xcode via CMake e workflow di CI.
+- `docs/DECISIONI.md`, `docs/ELYON_STYLE_BIBLE.md`, `docs/assets/provenienza.csv`.
+
+Modificato
+- Design System, Asset Spec e Architettura segnati come approvati.
+- Asset Spec: regole per gli asset AI, controllo della provenienza nel validatore, fasce di appoggio e di ingombro allineate agli sprite di riferimento.
+
 ## 0.4.0 — Fase 4 (lotta, cattura, crescita, squadra e box)
 
 Aggiunto

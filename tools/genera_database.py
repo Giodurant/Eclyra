@@ -381,9 +381,9 @@ ECCEZIONI_ABILITA_TXT = ("#003 014, #006 031, #009 023, #012 032, #015 010, #017
 # ALLENATORI (dal documento). Il formato e' "NOME" + livello.
 # ------------------------------------------------------------------
 ALLENATORI = [
-    ("KAEL_INIZIALE_VS_PYRIN", "KAEL", "Rivale", 100, "AI_SIMPLE", "AQUIL5", "", "Kael sceglie Aquil se il giocatore sceglie Pyrin."),
-    ("KAEL_INIZIALE_VS_AQUIL", "KAEL", "Rivale", 100, "AI_SIMPLE", "MOSSEN5", "", "Kael sceglie Mossen se il giocatore sceglie Aquil."),
-    ("KAEL_INIZIALE_VS_MOSSEN", "KAEL", "Rivale", 100, "AI_SIMPLE", "PYRIN5", "", "Kael sceglie Pyrin se il giocatore sceglie Mossen."),
+    ("KAEL_INIZIALE_VS_PYRIN", "KAEL", "Rivale", 100, "AI_INTRO", "AQUIL5", "", "Kael sceglie Aquil se il giocatore sceglie Pyrin."),
+    ("KAEL_INIZIALE_VS_AQUIL", "KAEL", "Rivale", 100, "AI_INTRO", "MOSSEN5", "", "Kael sceglie Mossen se il giocatore sceglie Aquil."),
+    ("KAEL_INIZIALE_VS_MOSSEN", "KAEL", "Rivale", 100, "AI_INTRO", "PYRIN5", "", "Kael sceglie Pyrin se il giocatore sceglie Mossen."),
     # Route 1 (non canonici: definiti in Fase 4 per i due Esploratori della mappa, premi bassi)
     ("ROUTE1_TEO", "TEO", "Esploratore", 80, "AI_SIMPLE", "LEAFIN5, ZAPPI6", "", "Allenatore di Route 1 (Fase 4)."),
     ("ROUTE1_NINA", "NINA", "Esploratrice", 90, "AI_SIMPLE", "NERUBI6, LUMI5", "", "Allenatrice di Route 1 (Fase 4)."),
@@ -425,8 +425,8 @@ MOSSE_SPECIALI = {
 # Squadre canoniche con un Elyon sotto il livello della sua evoluzione: eccezioni esplicite
 ECCEZIONI_LIVELLO = {
     "GUARDIANA_LIRA": "Decisione canonica: primo Guardiano Lv 16-21 con MOSSKA/LEAFORA (LEAFORA al Lv 18, evolve al 20).",
-    "GUARDIANO_KAIN": "Squadra canonica del documento: THORVAN al Lv 26 (THUNDERN evolve al 32). Da confermare.",
-    "NEXUS_COMMANDER": "Squadra canonica del documento: VENOROK al Lv 26 (VENOMA evolve al 29). Boss con specie rare.",
+    "GUARDIANO_KAIN": "Eccezione canonica confermata: THORVAN al Lv 26 (THUNDERN evolve al Lv 32). Non modificare il livello.",
+    "NEXUS_COMMANDER": "Eccezione canonica confermata: VENOROK al Lv 26 (VENOMA evolve al Lv 29). Non modificare il livello.",
 }
 
 # ------------------------------------------------------------------

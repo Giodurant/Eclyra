@@ -296,6 +296,22 @@ static void TestAllenatori(void) {
         VERIFICA(sotto == t->eccezioneLivello);
         if (t->eccezioneLivello) VERIFICA(t->nota && strlen(t->nota) > 10);
     }
+    /* Eccezioni canoniche confermate dal designer: livelli da NON modificare */
+    {
+        const TrainerData *kain = GetTrainer("GUARDIANO_KAIN"), *nexus = GetTrainer("NEXUS_COMMANDER");
+        VERIFICA(kain && kain->eccezioneLivello && nexus && nexus->eccezioneLivello);
+        const MembroSquadra *th = &kain->squadra[kain->numMembri - 1], *ve = &nexus->squadra[1];
+        VERIFICA(th->specie == GetSpeciesByName("THORVAN")->id && th->livello == 26);
+        VERIFICA(Evolution_LivelloMinimo(th->specie) == 32);
+        VERIFICA(ve->specie == GetSpeciesByName("VENOROK")->id && ve->livello == 26);
+        VERIFICA(Evolution_LivelloMinimo(ve->specie) == 29);
+        /* prima sfida di Kael: Lv5 e IA introduttiva */
+        const char *kael[3] = { "KAEL_INIZIALE_VS_PYRIN", "KAEL_INIZIALE_VS_AQUIL", "KAEL_INIZIALE_VS_MOSSEN" };
+        for (int i = 0; i < 3; i++) {
+            const TrainerData *k = GetTrainer(kael[i]);
+            VERIFICA(k && k->ia == AI_INTRO && k->numMembri == 1 && k->squadra[0].livello == 5);
+        }
+    }
     const TrainerData *lira = GetTrainer("GUARDIANA_LIRA");
     VERIFICA(lira && strcmp(lira->ricompensa, "SIGILLO_VERDE") == 0 && lira->premio == 2100);
     VERIFICA(lira->squadra[0].specie == 17 && lira->squadra[1].specie == 8);   /* LEAFORA, MOSSKA */

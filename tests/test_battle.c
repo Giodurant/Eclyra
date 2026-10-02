@@ -604,6 +604,46 @@ static void TestIA(void) {
     free(L);
 }
 
+/* IA introduttiva (prima sfida di Kael): mai stati sul giocatore, poche mosse super efficaci,
+ * esitazioni presenti, e una sola "grazia" sul colpo da KO */
+static void TestIAIntro(void) {
+    Rng_Init(&rng, 808);
+    Inventario_Azzera(&inv);
+    Collezione_Azzera(&coll);
+    Elyon mio;
+    Elyon_Crea(&mio, Specie("AQUIL"), 5, &rng);
+    Collezione_Aggiungi(&coll, &mio);
+    Lotta *L = malloc(sizeof(Lotta));
+    VERIFICA(Lotta_InitAllenatore(L, &coll, &inv, &rng, GetTrainer("KAEL_INIZIALE_VS_AQUIL")));
+    Lotta_Inizia(L);
+    int spora = 0, forte = 0, esita = 0, mosse = 0;
+    for (int i = 0; i < 3000; i++) {
+        Azione a = Lotta_SceltaIA(L);
+        VERIFICA(a.tipo == AZ_MOSSA);
+        if (a.param == MOSSA_ESITA) { esita++; continue; }
+        mosse++;
+        const MoveData *m = GetMove(L->lato[LATO_NEMICO].e->mosse[a.param]);
+        spora += m->id == Mossa("SPORA");
+        forte += m->id == Mossa("FRUSTA VERDE");
+    }
+    VERIFICA(spora == 0);
+    VERIFICA(esita > 0 && mosse > 0);
+    VERIFICA(forte * 100 < mosse * 30);          /* circa il 20% */
+    VERIFICA(L->introEsitaBase > 0 && L->introEsitaBase <= 75);
+    /* grazia: con il giocatore a 1 HP il primo colpo da KO viene risparmiato, il secondo no */
+    coll.squadra[0].hp = 1;
+    int grazie = 0;
+    for (int i = 0; i < 200; i++) {
+        bool prima = L->graziaIntro;
+        Azione a = Lotta_SceltaIA(L);
+        if (!prima && L->graziaIntro) { grazie++; VERIFICA(a.param == MOSSA_ESITA); }
+    }
+    VERIFICA(grazie == 1);
+    /* l'esitazione e' un turno perso, con messaggio, senza effetti collaterali */
+    coll.squadra[0].hp = coll.squadra[0].stat[STAT_HP];
+    free(L);
+}
+
 /* ---------------------------------------------------------------- simulazione */
 
 static uint32_t hashEventi;
@@ -784,6 +824,7 @@ int main(void) {
     TestCambioEKo();
     TestIA();
     TestIncontri();
+    TestIAIntro();
     TestSimulazioni();
     return FINE_TEST();
 }

@@ -127,3 +127,8 @@ add_executable(test_battle tests/test_battle.c)
 target_link_libraries(test_battle PRIVATE eclyra_core)
 target_compile_options(test_battle PRIVATE ${ECLYRA_WARN})
 add_test(NAME battle COMMAND test_battle)
+
+add_executable(test_bilanciamento tests/test_bilanciamento.c)
+target_link_libraries(test_bilanciamento PRIVATE eclyra_core)
+target_compile_options(test_bilanciamento PRIVATE ${ECLYRA_WARN})
+add_test(NAME bilanciamento COMMAND test_bilanciamento 2000)

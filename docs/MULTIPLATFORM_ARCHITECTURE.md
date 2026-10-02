@@ -1,6 +1,6 @@
 # ECLYRA — Architettura multipiattaforma
 
-Versione 1 (proposta in revisione). Obiettivo: **una sola logica di gioco** per Steam (Windows e Linux),
+Versione 1 — **approvata, da congelare dopo il prototipo iOS** (`prototypes/ios_sdl/PROTOTIPO_IOS.md`). Obiettivo: **una sola logica di gioco** per Steam (Windows e Linux),
 Steam Deck, Android, iOS e iPadOS, mantenendo C99 + raylib + CMake.
 
 Il mobile non è un adattamento successivo: input, interfaccia, ciclo di vita e salvataggi sono pensati

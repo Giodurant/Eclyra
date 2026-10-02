@@ -4,11 +4,11 @@
 #include <string.h>
 
 static const TrainerData ALLENATORI[] = {
-    { "KAEL_INIZIALE_VS_PYRIN", "KAEL", "Rivale", 100, AI_SIMPLE,
+    { "KAEL_INIZIALE_VS_PYRIN", "KAEL", "Rivale", 100, AI_INTRO,
       { { 4, 5, { 0, 0, 0, 0 } } }, 1, "", false, false, "Kael sceglie Aquil se il giocatore sceglie Pyrin." },
-    { "KAEL_INIZIALE_VS_AQUIL", "KAEL", "Rivale", 100, AI_SIMPLE,
+    { "KAEL_INIZIALE_VS_AQUIL", "KAEL", "Rivale", 100, AI_INTRO,
       { { 7, 5, { 0, 0, 0, 0 } } }, 1, "", false, false, "Kael sceglie Mossen se il giocatore sceglie Aquil." },
-    { "KAEL_INIZIALE_VS_MOSSEN", "KAEL", "Rivale", 100, AI_SIMPLE,
+    { "KAEL_INIZIALE_VS_MOSSEN", "KAEL", "Rivale", 100, AI_INTRO,
       { { 1, 5, { 0, 0, 0, 0 } } }, 1, "", false, false, "Kael sceglie Pyrin se il giocatore sceglie Mossen." },
     { "ROUTE1_TEO", "TEO", "Esploratore", 80, AI_SIMPLE,
       { { 16, 5, { 0, 0, 0, 0 } }, { 18, 6, { 0, 0, 0, 0 } } }, 2, "", false, false, "Allenatore di Route 1 (Fase 4)." },
@@ -21,11 +21,11 @@ static const TrainerData ALLENATORI[] = {
     { "NEXUS_SCIENZIATO", "SCIENZIATO NEXUS", "Scienziato Nexus", 1200, AI_STANDARD,
       { { 32, 15, { 0, 0, 0, 0 } }, { 34, 15, { 0, 0, 0, 0 } }, { 28, 14, { 0, 0, 0, 0 } } }, 3, "", false, false, "" },
     { "NEXUS_COMMANDER", "COMANDANTE NEXUS", "Comandante Nexus", 3000, AI_SMART,
-      { { 27, 25, { 0, 0, 0, 0 } }, { 56, 26, { 0, 0, 0, 0 } }, { 71, 27, { 0, 0, 0, 0 } } }, 3, "", false, true, "Boss: può avere specie rare non catturabili dal giocatore a quel punto. Squadra canonica del documento: VENOROK al Lv 26 (VENOMA evolve al 29). Boss con specie rare." },
+      { { 27, 25, { 0, 0, 0, 0 } }, { 56, 26, { 0, 0, 0, 0 } }, { 71, 27, { 0, 0, 0, 0 } } }, 3, "", false, true, "Boss: può avere specie rare non catturabili dal giocatore a quel punto. Eccezione canonica confermata: VENOROK al Lv 26 (VENOMA evolve al Lv 29). Non modificare il livello." },
     { "GUARDIANA_LIRA", "LIRA", "Guardiana", 2100, AI_STANDARD,
       { { 17, 18, { 0, 0, 0, 0 } }, { 8, 19, { 0, 0, 0, 0 } }, { 57, 21, { 0, 0, 0, 0 } } }, 3, "SIGILLO_VERDE", false, true, "Decisione canonica: primo Guardiano Lv 16-21 con MOSSKA/LEAFORA (LEAFORA al Lv 18, evolve al 20)." },
     { "GUARDIANO_KAIN", "KAIN", "Guardiano", 2600, AI_STANDARD,
-      { { 19, 23, { 0, 0, 0, 0 } }, { 39, 24, { 0, 0, 0, 0 } }, { 52, 26, { 0, 0, 0, 0 } } }, 3, "SIGILLO_TUONO", false, true, "Squadra canonica del documento: THORVAN al Lv 26 (THUNDERN evolve al 32). Da confermare." },
+      { { 19, 23, { 0, 0, 0, 0 } }, { 39, 24, { 0, 0, 0, 0 } }, { 52, 26, { 0, 0, 0, 0 } } }, 3, "SIGILLO_TUONO", false, true, "Eccezione canonica confermata: THORVAN al Lv 26 (THUNDERN evolve al Lv 32). Non modificare il livello." },
     { "GUARDIANA_MIRA", "MIRA", "Guardiana", 3000, AI_STANDARD,
       { { 14, 26, { 0, 0, 0, 0 } }, { 51, 27, { 0, 0, 0, 0 } }, { 69, 29, { 0, 0, 0, 0 } } }, 3, "SIGILLO_MAREE", false, false, "" },
     { "GUARDIANO_ROVAN", "ROVAN", "Guardiano", 3500, AI_SMART,

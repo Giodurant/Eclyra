@@ -22,6 +22,7 @@
 #define TESTO_EVENTO 96
 #define BOOST_MAX 6
 #define MOSSA_DIMENARSI (-1)     /* azione quando non restano PP */
+#define MOSSA_ESITA (-2)         /* solo IA introduttiva: l'Elyon dell'avversario perde il turno */
 #define ID_DIMENARSI 1           /* usa COLPO senza consumare PP, con contraccolpo */
 
 typedef enum { METEO_NESSUNO = 0, METEO_SOLE, METEO_PIOGGIA, METEO_NEVE, METEO_TEMPESTA, METEO_NEBBIA, NUM_METEO } Meteo;
@@ -107,6 +108,8 @@ typedef struct {
     int tentativiFuga;
     int cureBoss, cureBossMax;
     int ultimoCambioIA;
+    bool graziaIntro;                  /* AI_INTRO: colpo da KO gia' risparmiato una volta */
+    int introEsitaBase;                /* AI_INTRO: % di esitazione calcolata a inizio lotta (-1 = da calcolare) */
     bool partecipanti[MAX_SQUADRA];    /* hanno affrontato il nemico in campo */
     bool livelloSalito[MAX_SQUADRA];   /* per controllare le evoluzioni a fine lotta */
     bool catturaEvento;                /* permette di catturare un primordiale */

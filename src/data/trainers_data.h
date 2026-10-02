@@ -6,7 +6,9 @@
 
 #define MAX_SQUADRA_ALLENATORE 6
 
-typedef enum { AI_SIMPLE = 0, AI_STANDARD, AI_SMART, AI_BOSS } LivelloIA;
+/* AI_INTRO: lotta introduttiva (prima sfida di Kael), piu' blanda di AI_SIMPLE.
+ * L'ordine conta: i livelli piu' alti sono "piu' furbi" (confronti con < e >=). */
+typedef enum { AI_INTRO = 0, AI_SIMPLE, AI_STANDARD, AI_SMART, AI_BOSS } LivelloIA;
 
 typedef struct {
     int specie;

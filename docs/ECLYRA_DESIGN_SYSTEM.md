@@ -1,12 +1,14 @@
 # ECLYRA — Design System
 
-Versione 2 (proposta in revisione). Sostituisce la v1, archiviata in `docs/design/archivio_v1/`.
+Versione 2 — **APPROVATA e congelata** (vedi `docs/DECISIONI.md`). Sono ammesse solo rifiniture di leggibilità,
+spaziature e dettagli UI. Sostituisce la v1, archiviata in `docs/design/archivio_v1/`.
 Storia, mondo, dati e regole di gioco restano quelli di `ECLYRA_MASTER_PER_CLAUDE.md`: questo documento
 definisce **come appare e come si usa** il gioco su tutte le piattaforme.
 
 Documenti collegati:
 - `ECLYRA_ASSET_SPEC.md`: formati, nomi e pipeline degli asset.
 - `MULTIPLATFORM_ARCHITECTURE.md`: input, scaling, salvataggi e build.
+- `ELYON_STYLE_BIBLE.md`: regole per disegnare tutti gli Elyon a partire dai 9 di riferimento.
 
 Ogni immagine citata è generata dagli script in `tools/design/` alla risoluzione reale del gioco:
 

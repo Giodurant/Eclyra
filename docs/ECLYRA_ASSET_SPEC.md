@@ -1,6 +1,6 @@
 # ECLYRA — Specifica degli asset
 
-Versione 1 (proposta in revisione). Complementare a `ECLYRA_DESIGN_SYSTEM.md`, che definisce l'aspetto;
+Versione 1 — **APPROVATA** (uso di strumenti AI approvato, con le regole della §9.3). Complementare a `ECLYRA_DESIGN_SYSTEM.md`, che definisce l'aspetto;
 qui si definisce **come ogni asset nasce, si chiama, si controlla e si importa**.
 
 Contesto: non c'è budget per un pixel artist esterno. Gli asset si producono internamente con
@@ -63,7 +63,7 @@ docs/assets/provenienza.csv                   registro di provenienza (§9)
 
 | Asset | Dimensione | Fotogrammi | Note |
 |---|---|---|---|
-| Lotta | 64×64 per fotogramma | 5: riposo, respiro, battito, affondo, colpito | 3/4 di profilo, muso a sinistra; piedi a y = 58; il lato giocatore è lo specchio |
+| Lotta | 64×64 per fotogramma | 5: riposo, respiro, battito, affondo, colpito | 3/4 di profilo, muso a sinistra; appoggio a y = 58 (pixel opachi fino a y = 62, riga 63 solo ombra); il lato giocatore è lo specchio |
 | Lotta, versione grande (facoltativa) | 80×80 | 5 | se presente sostituisce lo specchio ingrandito sul lato giocatore; disegnata, non scalata |
 | Icona | 32×32 | 2: riposo, saltello | semplificata a mano: silhouette e colori principali, al massimo 1 riflesso |
 | Boss | 128×128 | 5 | AURION, VESPERA e forme speciali |
@@ -75,7 +75,9 @@ docs/assets/provenienza.csv                   registro di provenienza (§9)
 - occhi con sclera, iride e riflesso;
 - nodo di Lumen;
 - taglia per stadio 84%, 93% o 100%;
-- ombra al suolo semitrasparente (unico pixel con alfa intermedia ammesso nello sprite).
+- ombra al suolo semitrasparente e alone del nodo di Lumen (gli unici pixel con alfa intermedia ammessi nello sprite).
+
+Regole complete e misure: `ELYON_STYLE_BIBLE.md`.
 
 **Tempi**:
 - riposo e respiro: 500 ms ciascuno;
@@ -217,6 +219,14 @@ Il risultato è sempre una **bozza**: la rifinitura manuale è obbligatoria per 
 
 ### 9.3 Provenienza e Steam
 
+**Regola approvata**: gli strumenti AI si possono usare, perché non c'è budget per un pixel artist esterno.
+Ogni asset destinato alla build finale però **deve**:
+1. essere controllato e rifinito a mano (nessun output generativo entra nel gioco così com'è);
+2. rispettare la palette e la pixel art di ECLYRA (Design System e STYLE BIBLE);
+3. avere la provenienza registrata;
+4. conservare, quando possibile, la sorgente o il prompt di produzione (`art_src/`).
+
+
 - Per ogni asset si registra in `docs/assets/provenienza.csv`:
   - file;
   - origine: procedurale, generativo + rifinitura, oppure manuale;
@@ -224,7 +234,7 @@ Il risultato è sempre una **bozza**: la rifinitura manuale è obbligatoria per 
   - prompt (file in `art_src/prompt/`);
   - data;
   - autore della rifinitura.
-- **Steam** chiede di dichiarare nel questionario sui contenuti i contenuti generati con l'IA prima del rilascio (grafica, testi, audio usati nel gioco o nella pagina del negozio); le regole del gennaio 2026 escludono gli strumenti di sviluppo come gli assistenti al codice. Il registro rende la dichiarazione facile e precisa.
+- **Steam**: nel Content Survey della pagina del gioco va dichiarato l'uso di contenuti generativi AI distribuiti nel gioco (contenuti pre-generati: descrizione testuale di cosa e come). Steam chiede di dichiarare nel questionario sui contenuti i contenuti generati con l'IA prima del rilascio (grafica, testi, audio usati nel gioco o nella pagina del negozio); le regole del gennaio 2026 escludono gli strumenti di sviluppo come gli assistenti al codice. Il registro rende la dichiarazione facile e precisa.
 - Si usano solo strumenti generativi le cui condizioni permettono l'uso commerciale del risultato; le condizioni vanno ricontrollate a ogni cambio di strumento.
 
 ## 10. Validatore (controlli automatici)
@@ -234,12 +244,13 @@ Il risultato è sempre una **bozza**: la rifinitura manuale è obbligatoria per 
 | Nome | non rispetta la convenzione o non è nel manifest |
 | Dimensioni | non corrispondono alla tabella per il tipo di asset; larghezza del foglio non multipla del fotogramma |
 | Palette | un pixel opaco usa un colore fuori palette |
-| Alfa | valori intermedi in sprite, tile o UI (eccetto ombra al suolo ed effetti) |
-| Punto d'appoggio | Elyon: nessun pixel opaco sotto y = 60; personaggi: piedi non sull'ultima riga |
+| Alfa | valori intermedi in sprite, tile o UI (eccetto ombra al suolo, alone del nodo di Lumen ed effetti) |
+| Provenienza | build finale: l'asset non ha una riga completa in `docs/assets/provenienza.csv` (errore bloccante) |
+| Punto d'appoggio | Elyon: pixel opachi sulla riga 63, o pixel più basso fuori dalla fascia dello stadio (STYLE BIBLE §1); personaggi: piedi non sull'ultima riga |
 | Contorno | pixel opachi a contatto col trasparente più chiari del 60% della rampa (contorno mancante) |
 | Fotogrammi | numero diverso da quello del manifest |
 | Animazioni | fotogrammi identici dove è richiesto movimento |
-| Leggibilità | Elyon: silhouette che occupa meno del 25% o più del 95% del riquadro |
+| Leggibilità | Elyon: pixel opachi fuori dalla fascia dello stadio (base 17–28%, intermedio 29–43%, finale 42–60%: STYLE BIBLE §7) |
 
 ## 11. Checklist di revisione (umana)
 

@@ -514,17 +514,17 @@ Mosse: Lv1 RAGGIO STELLARE, Lv1 ABISSO, Lv1 ROTTURA LUMEN, Lv1 EQUILIBRIO, Lv30 
 
 ## Allenatori
 
-- **KAEL_INIZIALE_VS_PYRIN** (Rivale, premio 100, AI_SIMPLE): AQUIL5
-- **KAEL_INIZIALE_VS_AQUIL** (Rivale, premio 100, AI_SIMPLE): MOSSEN5
-- **KAEL_INIZIALE_VS_MOSSEN** (Rivale, premio 100, AI_SIMPLE): PYRIN5
+- **KAEL_INIZIALE_VS_PYRIN** (Rivale, premio 100, AI_INTRO): AQUIL5
+- **KAEL_INIZIALE_VS_AQUIL** (Rivale, premio 100, AI_INTRO): MOSSEN5
+- **KAEL_INIZIALE_VS_MOSSEN** (Rivale, premio 100, AI_INTRO): PYRIN5
 - **ROUTE1_TEO** (Esploratore, premio 80, AI_SIMPLE): LEAFIN5, ZAPPI6
 - **ROUTE1_NINA** (Esploratrice, premio 90, AI_SIMPLE): NERUBI6, LUMI5
 - **NEXUS_RECLUTA_01** (Recluta Nexus, premio 280, AI_SIMPLE): FLARO8, ZAPPI7
 - **NEXUS_RECLUTA_02** (Recluta Nexus, premio 360, AI_SIMPLE): SHADEK10, TOXIL9
 - **NEXUS_SCIENZIATO** (Scienziato Nexus, premio 1200, AI_STANDARD): MINDI15, FERROK15, LUMI14
-- **NEXUS_COMMANDER** (Comandante Nexus, premio 3000, AI_SMART): SHADEVOR25, VENOROK26, UMBRAX27 — Squadra canonica del documento: VENOROK al Lv 26 (VENOMA evolve al 29). Boss con specie rare.
+- **NEXUS_COMMANDER** (Comandante Nexus, premio 3000, AI_SMART): SHADEVOR25, VENOROK26, UMBRAX27 — Eccezione canonica confermata: VENOROK al Lv 26 (VENOMA evolve al Lv 29). Non modificare il livello.
 - **GUARDIANA_LIRA** (Guardiana, premio 2100, AI_STANDARD): LEAFORA18, MOSSKA19, STEELYN21 → SIGILLO_VERDE — Decisione canonica: primo Guardiano Lv 16-21 con MOSSKA/LEAFORA (LEAFORA al Lv 18, evolve al 20).
-- **GUARDIANO_KAIN** (Guardiano, premio 2600, AI_STANDARD): ZAPPOLT23, THUNDERN24, THORVAN26 → SIGILLO_TUONO — Squadra canonica del documento: THORVAN al Lv 26 (THUNDERN evolve al 32). Da confermare.
+- **GUARDIANO_KAIN** (Guardiano, premio 2600, AI_STANDARD): ZAPPOLT23, THUNDERN24, THORVAN26 → SIGILLO_TUONO — Eccezione canonica confermata: THORVAN al Lv 26 (THUNDERN evolve al Lv 32). Non modificare il livello.
 - **GUARDIANA_MIRA** (Guardiana, premio 3000, AI_STANDARD): NERULON26, AQUALIS27, HYDRELL29 → SIGILLO_MAREE
 - **GUARDIANO_ROVAN** (Guardiano, premio 3500, AI_SMART): FLAROK31, MAGMOR32, PYROVAR34 → SIGILLO_FUOCO
 - **GUARDIANA_SELENE** (Guardiana, premio 4000, AI_SMART): FROSTEL35, GLACIRA36, NIVALIS38 → SIGILLO_GHIACCIO

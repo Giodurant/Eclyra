@@ -433,6 +433,7 @@ static void Termina(Lotta *L, EsitoLotta esito) {
 
 static void InitBase(Lotta *L, Collezione *c, Inventario *inv, Rng *rng) {
     memset(L, 0, sizeof(*L));
+    L->introEsitaBase = -1;
     L->coll = c;
     L->inv = inv;
     L->rng = rng;
@@ -907,7 +908,12 @@ static void EseguiAzione(Lotta *L, int lato, const Azione *az) {
     Combattente *k = &L->lato[lato];
     if (L->esito != ESITO_IN_CORSO || Elyon_Esausto(k->e)) return;
     switch (az->tipo) {
-    case AZ_MOSSA:   UsaMossa(L, lato, az->param); break;
+    case AZ_MOSSA:
+        if (az->param == MOSSA_ESITA) {
+            char n[48];
+            MSG(L, "%s esita: non è ancora abituato ai comandi!", NomeLato(L, lato, n, sizeof(n)));
+        } else UsaMossa(L, lato, az->param);
+        break;
     case AZ_CAMBIO:  Cambio(L, lato, az->param); break;
     case AZ_FUGA:    Fuga(L); break;
     case AZ_OGGETTO:
@@ -971,6 +977,104 @@ static int ValoreStato(const Lotta *L, const MoveData *m) {
     }
 }
 
+/* IA introduttiva (prima sfida di Kael). Kael ha appena ricevuto il suo Elyon: la lotta fa da tutorial.
+ * Non bara: danni, precisione e statistiche restano quelli normali; cambia solo cosa sceglie.
+ *  1) Mai mosse che infliggono stati o calano le statistiche del giocatore.
+ *  2) Mosse super efficaci solo nel INTRO_PROB_FORTE% dei casi, altrimenti una mossa neutra.
+ *  3) Handicap equo: a inizio lotta stima quanti turni servono a ciascuno per vincere (miglior colpo
+ *     neutro contro HP) e fissa una probabilita' di esitazione tale che Kael abbia bisogno di almeno
+ *     INTRO_MARGINE% dei turni del giocatore. Cosi' ogni starter parte alla pari, qualunque sia
+ *     l'incontro, senza numeri scritti a mano per ciascuna coppia.
+ *  4) Elastico: se Kael e' in vantaggio di HP esita un po' di piu', se e' in svantaggio molto meno.
+ *  5) Una volta per lotta rinuncia al colpo che manderebbe KO il giocatore.
+ * La sconfitta resta possibile (giocate a caso, mosse di stato inutili, colpi critici). */
+#ifndef INTRO_PROB_FORTE
+#define INTRO_PROB_FORTE 20
+#endif
+#ifndef INTRO_MARGINE
+#define INTRO_MARGINE 140
+#endif
+#ifndef INTRO_ELASTICO
+#define INTRO_ELASTICO 50          /* punti di esitazione per 100 punti di vantaggio in HP% */
+#endif
+#define INTRO_ESITA_MAX 75
+
+static int PercHp(const Elyon *e) { return e->hp * 100 / (e->stat[STAT_HP] > 0 ? e->stat[STAT_HP] : 1); }
+static int MigliorDannoTra(const Lotta *L, const Elyon *att, const Elyon *dif);
+
+/* Danno atteso per turno con le stesse regole di scelta di SceltaIntro (senza esitazione):
+ * media delle mosse "altre" (le mosse di stato innocue contano 0) e delle super efficaci */
+static int DannoAttesoIntro(const Lotta *L) {
+    const Elyon *k = L->lato[LATO_NEMICO].e;
+    int sommaF = 0, nf = 0, sommaA = 0, na = 0;
+    for (int i = 0; i < MAX_MOSSE_ELYON; i++) {
+        const MoveData *m = GetMove(k->mosse[i]);
+        if (!m || k->pp[i] <= 0) continue;
+        if (m->categoria == CAT_STATO) {
+            if (m->effetto != EFF_STATUS && m->effetto != EFF_BOOST_NEMICO) na++;
+            continue;
+        }
+        int d = Lotta_StimaDanno(L, LATO_NEMICO, m->id, 0.95f) * m->precisione / 100;
+        if (Lotta_EfficaciaContro(L, LATO_GIOCATORE, m->tipo) > 1.0f) { sommaF += d; nf++; }
+        else { sommaA += d; na++; }
+    }
+    if (nf == 0) return na ? sommaA / na : 0;
+    if (na == 0) return sommaF / nf;
+    return (sommaA * (100 - INTRO_PROB_FORTE) / na + sommaF * INTRO_PROB_FORTE / nf) / 100;
+}
+
+/* Cura per turno data dall'abilita' (es. RADICE_VIVA): riduce il danno netto dell'avversario */
+static int CuraTurnoAbilita(const Lotta *L, const Elyon *e) {
+    const AbilityData *ab = Abilita(e);
+    if (!ab || ab->effetto != AB_CURA_FINE_TURNO || !CondizioneOk(L, e, ab->condizione)) return 0;
+    return (int)((float)e->stat[STAT_HP] * ab->moltiplicatore / 100.0f);
+}
+
+static int EsitazioneBaseIntro(const Lotta *L) {
+    const Elyon *k = L->lato[LATO_NEMICO].e, *g = L->lato[LATO_GIOCATORE].e;
+    int dannoG = MigliorDannoTra(L, g, k) - CuraTurnoAbilita(L, k);
+    int dannoK = DannoAttesoIntro(L) - CuraTurnoAbilita(L, g);
+    if (dannoG < 1) dannoG = 1;
+    if (dannoK < 1) dannoK = 1;
+    /* turni per vincere, x100 per lavorare con interi */
+    int turniG = (k->hp * 100 + dannoG - 1) / dannoG;
+    int turniK = (g->hp * 100 + dannoK - 1) / dannoK;
+    int obiettivo = turniG * INTRO_MARGINE / 100;           /* turni che Kael deve "spendere" */
+    if (turniK >= obiettivo) return 0;
+    return Utils_ClampInt(100 - turniK * 100 / obiettivo, 0, INTRO_ESITA_MAX);
+}
+
+static Azione SceltaIntro(Lotta *L, const int *validi, int nv) {
+    Azione az = { AZ_MOSSA, validi[0], 0, 0 };
+    const Combattente *k = &L->lato[LATO_NEMICO], *g = &L->lato[LATO_GIOCATORE];
+    if (L->introEsitaBase < 0) L->introEsitaBase = EsitazioneBaseIntro(L);
+
+    int vantaggio = PercHp(k->e) - PercHp(g->e);
+    int esita = L->introEsitaBase + vantaggio * INTRO_ELASTICO / 100;
+    esita = Utils_ClampInt(esita, 0, INTRO_ESITA_MAX);
+    if (Rng_Range(L->rng, 100) < esita) { az.param = MOSSA_ESITA; return az; }
+
+    int forti[MAX_MOSSE_ELYON], nf = 0, altre[MAX_MOSSE_ELYON], na = 0;
+    for (int v = 0; v < nv; v++) {
+        const MoveData *m = GetMove(k->e->mosse[validi[v]]);
+        if (m->categoria == CAT_STATO) {
+            if (m->effetto == EFF_STATUS || m->effetto == EFF_BOOST_NEMICO) continue;
+            altre[na++] = validi[v];
+        } else if (Lotta_EfficaciaContro(L, LATO_GIOCATORE, m->tipo) > 1.0f) forti[nf++] = validi[v];
+        else altre[na++] = validi[v];
+    }
+    if (nf + na == 0) { az.param = validi[Rng_Range(L->rng, nv)]; return az; }
+    if (nf > 0 && (na == 0 || Rng_Range(L->rng, 100) < INTRO_PROB_FORTE)) az.param = forti[Rng_Range(L->rng, nf)];
+    else az.param = altre[Rng_Range(L->rng, na)];
+
+    const MoveData *m = GetMove(k->e->mosse[az.param]);
+    if (!L->graziaIntro && m->categoria != CAT_STATO && Lotta_StimaDanno(L, LATO_NEMICO, m->id, 0.85f) >= g->e->hp) {
+        L->graziaIntro = true;
+        az.param = MOSSA_ESITA;
+    }
+    return az;
+}
+
 Azione Lotta_SceltaIA(Lotta *L) {
     Azione az = { AZ_MOSSA, MOSSA_DIMENARSI, 0, 0 };
     Combattente *k = &L->lato[LATO_NEMICO], *g = &L->lato[LATO_GIOCATORE];
@@ -979,6 +1083,7 @@ Azione Lotta_SceltaIA(Lotta *L) {
     if (nv == 0) return az;
     LivelloIA ia = L->allenatore ? L->allenatore->ia : AI_SIMPLE;
 
+    if (ia == AI_INTRO) return SceltaIntro(L, validi, nv);
     if (ia == AI_SIMPLE) { az.param = validi[Rng_Range(L->rng, nv)]; return az; }
 
     /* BOSS: cure limitate sotto il 30% */
@@ -1032,7 +1137,7 @@ Azione Lotta_SceltaIA(Lotta *L) {
 
 static int PrioritaAzione(const Lotta *L, int lato, const Azione *az) {
     if (az->tipo != AZ_MOSSA) return 10;      /* cambi, oggetti e fuga prima delle mosse */
-    if (az->param == MOSSA_DIMENARSI) return 0;
+    if (az->param == MOSSA_DIMENARSI || az->param == MOSSA_ESITA) return 0;
     const MoveData *m = GetMove(L->lato[lato].e->mosse[az->param]);
     return m ? m->priorita : 0;
 }

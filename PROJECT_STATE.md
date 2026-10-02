@@ -1,6 +1,9 @@
 # PROJECT_STATE — ECLYRA
 
-Ultimo aggiornamento: Fase 4 completata (versione 0.4.0). Proposta di nuova direzione artistica in revisione: `docs/DESIGN_SYSTEM.md`.
+Ultimo aggiornamento: Design System v2 APPROVATO e congelato (2026-10-02, `docs/DECISIONI.md`).
+In corso: validazione dei due rischi principali.
+- Prototipo iOS: pronto, in attesa della prova su un dispositivo reale.
+- Bilanciamento della prima lotta con Kael: risolto con `AI_INTRO`.
 
 ## Come riprendere il lavoro
 1. Leggere `ECLYRA_MASTER_PER_CLAUDE` (specifica) e questo file.
@@ -8,16 +11,14 @@ Ultimo aggiornamento: Fase 4 completata (versione 0.4.0). Proposta di nuova dire
 3. `./build/eclyra --screenshot-test` (dalla cartella in cui salvare i PNG) e controllare le immagini.
 4. Proseguire dalla prima voce non spuntata del piano.
 
-## Revisione artistica (in corso)
+## Direzione artistica e multipiattaforma
 - [x] Design System v1 (non approvata), archiviata in `docs/design/archivio_v1/`.
-- [x] Direzione definitiva v2, solo documenti e mockup:
-  - `docs/ECLYRA_DESIGN_SYSTEM.md`, `docs/ECLYRA_ASSET_SPEC.md`, `docs/MULTIPLATFORM_ARCHITECTURE.md`;
-  - 12 mockup e 3 varianti (telefono, Steam Deck) in `docs/design/mockup_v2/`;
-  - 9 sprite di riferimento in `docs/design/tavola_starter.png`.
-  - Generatori: `tools/design/mockups_v2.py`, `tavole.py`.
-- [ ] Revisione e approvazione dell'utente. NON iniziare l'implementazione prima.
-- [ ] Prototipo iOS con raylib e backend SDL: è il rischio principale.
-- [ ] Implementazione secondo MULTIPLATFORM_ARCHITECTURE §10. Passi:
+- [x] Design System v2 **approvato e congelato**: `ECLYRA_DESIGN_SYSTEM.md`, `ECLYRA_ASSET_SPEC.md`, `MULTIPLATFORM_ARCHITECTURE.md`, 12 mockup in `docs/design/mockup_v2/`. Ammesse solo rifiniture di leggibilità e spaziature.
+- [x] STYLE BIBLE degli Elyon dai 9 sprite di riferimento: `docs/ELYON_STYLE_BIBLE.md`.
+- [x] Asset AI approvati, con provenienza obbligatoria: `docs/assets/provenienza.csv`, ASSET_SPEC §9.3.
+- [x] Prototipo iOS (raylib + SDL2) in `prototypes/ios_sdl/`. Prova automatica Linux superata: 20/20.
+- [ ] **Prova del prototipo su iPhone/iPad reale** (`PROTOTIPO_IOS.md` §4). Va fatta sul Mac di Giorgio; serve Xcode.
+- [ ] Se il prototipo è stabile: congelare `MULTIPLATFORM_ARCHITECTURE.md` e implementare secondo §10, in 7 passi. NON iniziare prima.
   1. input astratto;
   2. platform layer;
   3. canvas variabile;
@@ -121,11 +122,10 @@ Ultimo aggiornamento: Fase 4 completata (versione 0.4.0). Proposta di nuova dire
   e testata con la matrice, ma con i dati attuali non si attiva.
 
 ## Problemi noti / da fare
-- **Bilanciamento della prima sfida di Kael** (Lv 5 contro lo starter in vantaggio, come da documento):
-  su 2000 lotte simulate con la mossa migliore il giocatore vince il 13,5% con PYRIN, il 3% con MOSSEN e
-  lo 0,1% con AQUIL; al Lv 9 sale al 78% / 54% / 47%. La sfida si attiva solo parlando con Kael, quindi
-  ci si può allenare prima, e perdere non ha penalità. Da decidere in Fase 5 (es. prima sfida senza
-  conseguenze come scena, IA di Kael più blanda, o livelli diversi).
+- **Prima sfida di Kael**: risolta con l'IA introduttiva (`AI_INTRO`), Kael resta al Lv5.
+  - Vittorie del giocatore esperto: PYRIN 86%, AQUIL 91%, MOSSEN 73%.
+  - Test: `tests/test_bilanciamento.c`.
+  - Da osservare: con AQUIL la lotta è lunga (24–29 turni) e Kael esita spesso, per via dei dati di AQUIL a Lv5 (vedi `docs/DECISIONI.md`).
 - Scelta dello starter provvisoria (capsule + SÌ/NO): la scena con Elian, Kael e la creazione del
   personaggio arriva nella Fase 5. Anche i 5 CORE e le 2 ERBA VITALE consegnati sono provvisori.
 - Gli allenatori sfidano solo quando ci si parla (niente "sguardo" a distanza per ora).
