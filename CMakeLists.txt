@@ -96,6 +96,12 @@ add_custom_command(TARGET eclyra POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_directory
           ${CMAKE_SOURCE_DIR}/assets $<TARGET_FILE_DIR:eclyra>/assets)
 
+# ---------------------------------------------------------------- vertical slice visiva
+option(ECLYRA_BUILD_SLICE "Compila la vertical slice visiva (slice/)" ON)
+if(ECLYRA_BUILD_SLICE)
+  add_subdirectory(slice)
+endif()
+
 # ---------------------------------------------------------------- test
 enable_testing()
 add_executable(test_utils tests/test_utils.c)

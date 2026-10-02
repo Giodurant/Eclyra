@@ -1,6 +1,6 @@
 # PROJECT_STATE — ECLYRA
 
-Ultimo aggiornamento: Design System v2 APPROVATO e congelato (2026-10-02, `docs/DECISIONI.md`).
+Ultimo aggiornamento: vertical slice visiva pronta per la revisione (2026-10-02). Design System v2 APPROVATO e congelato (`docs/DECISIONI.md`).
 In corso: validazione dei due rischi principali.
 - Prototipo iOS: pronto, in attesa della prova su un dispositivo reale.
 - Bilanciamento della prima lotta con Kael: risolto con `AI_INTRO`.
@@ -17,6 +17,13 @@ In corso: validazione dei due rischi principali.
 - [x] STYLE BIBLE degli Elyon dai 9 sprite di riferimento: `docs/ELYON_STYLE_BIBLE.md`.
 - [x] Asset AI approvati, con provenienza obbligatoria: `docs/assets/provenienza.csv`, ASSET_SPEC §9.3.
 - [x] Prototipo iOS (raylib + SDL2) in `prototypes/ios_sdl/`. Prova automatica Linux superata: 20/20.
+- [x] Vertical slice visiva giocabile (`slice/`, `docs/VERTICAL_SLICE.md`) e verifica dei 9 Elyon (`tools/design/valida_elyon.py`).
+- [ ] Sequenza di validazione (DECISIONI 2026-10-02):
+  - A, test iOS reale: da fare;
+  - B, slice: in revisione;
+  - C, coerenza Elyon: controlli automatici superati;
+  - D, UI nei 3 formati: in revisione;
+  - E, prima lotta: registro dei test reali da compilare.
 - [ ] **Prova del prototipo su iPhone/iPad reale** (`PROTOTIPO_IOS.md` §4). Va fatta sul Mac di Giorgio; serve Xcode.
 - [ ] Se il prototipo è stabile: congelare `MULTIPLATFORM_ARCHITECTURE.md` e implementare secondo §10, in 7 passi. NON iniziare prima.
   1. input astratto;

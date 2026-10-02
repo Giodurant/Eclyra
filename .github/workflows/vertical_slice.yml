@@ -1,0 +1,21 @@
+# Vertical slice: compilazione e tour automatico di foto nei 3 formati (controllo visivo in CI)
+name: vertical-slice
+on:
+  push:
+    paths: ["slice/**", "src/**", "tools/design/**", ".github/workflows/vertical_slice.yml"]
+  workflow_dispatch:
+
+jobs:
+  tour:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y libgl1-mesa-dev libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev xvfb
+      - run: cmake -S . -B build && cmake --build build -j
+      - run: ctest --test-dir build --output-on-failure
+      - name: verifica dei 9 Elyon
+        run: pip install pillow numpy scipy && python3 tools/design/valida_elyon.py
+      - name: tour della slice
+        run: cd build/slice && xvfb-run -a -s "-screen 0 1920x1080x24" ./eclyra_slice --tour ../../tour
+      - uses: actions/upload-artifact@v4
+        with: { name: foto-vertical-slice, path: tour }

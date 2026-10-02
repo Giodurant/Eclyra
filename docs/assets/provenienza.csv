@@ -11,3 +11,14 @@ assets/tilesets/laboratorio.png,procedurale,tools/genera_grafica_fase2.py,Fase 1
 assets/tilesets/negozio.png,procedurale,tools/genera_grafica_fase2.py,Fase 1-4,tools/genera_grafica_fase2.py,2026-10-01,nessuna,no,"grafica provvisoria, da sostituire con asset Design System v2"
 assets/tilesets/tileset.png,procedurale,tools/genera_grafica_base.py,Fase 1-4,tools/genera_grafica_base.py,2026-10-01,nessuna,no,"grafica provvisoria, da sostituire con asset Design System v2"
 prototypes/ios_sdl/assets/pyrin.png,procedurale,tools/design/elyon_design.py,v2,tools/design/elyon_design.py (PYRIN),2026-10-02,nessuna,no,sprite di riferimento della STYLE BIBLE
+slice/assets/ui.png,procedurale,tools/design/slice_export.py,v2,tools/design/slice_export.py,2026-10-02,nessuna,no,"vertical slice: icone, badge dei tipi, cursore, cristalli"
+slice/assets/elyon.png,procedurale,tools/design/slice_export.py,v2,tools/design/slice_export.py,2026-10-02,nessuna,no,vertical slice: 9 Elyon di riferimento in 4 viste
+slice/assets/tiles.png,procedurale,tools/design/slice_export.py,v2,tools/design/slice_export.py,2026-10-02,nessuna,no,vertical slice: terreni con autotile
+slice/assets/oggetti.png,procedurale,tools/design/slice_export.py,v2,tools/design/slice_export.py,2026-10-02,nessuna,no,"vertical slice: alberi, edifici, cartello, rosa del Lumen"
+slice/assets/personaggi.png,procedurale,tools/design/slice_export.py,v2,tools/design/slice_export.py,2026-10-02,nessuna,no,vertical slice: personaggi 16x24 in 4 direzioni
+slice/assets/lotta.png,procedurale,tools/design/slice_export.py,v2,tools/design/slice_export.py,2026-10-02,nessuna,no,vertical slice: cerchi runici animati
+slice/assets/lotta_prato.png,procedurale,tools/design/slice_export.py,v2,tools/design/slice_export.py,2026-10-02,nessuna,no,vertical slice: fondale di lotta
+slice/assets/titolo.png,procedurale,tools/design/slice_export.py,v2,tools/design/slice_export.py,2026-10-02,nessuna,no,vertical slice: fondale del titolo
+slice/assets/logo.png,procedurale,tools/design/slice_export.py,v2,tools/design/slice_export.py,2026-10-02,nessuna,no,vertical slice: logo
+slice/assets/mappa_asterra.png,procedurale,tools/design/slice_export.py,v2,tools/design/slice_export.py,2026-10-02,nessuna,no,vertical slice: mappa di Asterra
+slice/assets/mappa_regioni.png,procedurale,tools/design/slice_export.py,v2,tools/design/slice_export.py,2026-10-02,nessuna,no,vertical slice: maschera delle regioni

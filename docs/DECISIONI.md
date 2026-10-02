@@ -57,3 +57,28 @@ Su Steam l'uso di contenuti generativi AI distribuiti nel gioco va dichiarato ne
 - Prova automatica superata su Linux con la stessa strada SDL: 20/20 prove, e 14/14 nel ramo mobile.
 - La prova su iPhone/iPad reale va fatta su un Mac con Xcode, seguendo il protocollo di `PROTOTIPO_IOS.md` §4.
 - **Esito sul dispositivo: in attesa.**
+
+---
+
+## 2026-10-02 (seconda parte) — Ultima fase di validazione prima dell'implementazione
+
+Confermate le decisioni su design, architettura e multipiattaforma.
+
+| # | Tema | Decisione |
+|---|---|---|
+| 1 | Kael | **Confermati**:<br>• Lv5;<br>• IA introduttiva;<br>• nessuna modifica artificiale alle statistiche;<br>• sconfitta senza penalità.<br>Le simulazioni sono accettabili; Kael non si modifica oltre. **AQUIL sotto osservazione**: se nei test reali la sua prima lotta è troppo lunga o poco interessante, si cambiano le sue mosse iniziali, non la difficoltà di Kael. |
+| 2 | iOS | Il prototipo resta **separato** dal codice principale. iOS **non è validato** finché non c'è un test su un iPhone o iPad reale. Dopo il test si registrano:<br>• avvio;<br>• rendering 320×180;<br>• scaling;<br>• touch, controller, tastiera;<br>• audio;<br>• pausa/ripresa;<br>• salvataggio;<br>• test automatico.<br>Registro: `docs/test/TEST_IOS_REALE.md`. |
+| 3 | Vertical slice visiva | Prima degli asset definitivi: una sezione completa del gioco con i **soli 9 sprite di riferimento**, cioè:<br>• Lunaria;<br>• una porzione di Route 1;<br>• una battaglia;<br>• il menu principale;<br>• Bestiario;<br>• Mappa;<br>• dialogo;<br>• Scheda Elyon;<br>• Evoluzione.<br>L'obiettivo è la qualità, non la quantità. Formato scelto: **giocabile**, eseguibile separato. |
+| 4 | Controllo qualità visivo | La slice deve rispettare:<br>• palette;<br>• STYLE BIBLE;<br>• design system;<br>• cornici e UI;<br>• proporzioni e pixel art;<br>• Lumen;<br>• leggibilità e scaling;<br>• mobile e Steam Deck.<br>Nessuno stile nuovo senza approvazione. |
+| 5 | Asset AI | Nessun pixel artist esterno: gli asset si producono internamente. Ogni asset definitivo deve:<br>• rispettare STYLE BIBLE e palette;<br>• avere la provenienza registrata;<br>• essere verificabile;<br>• essere sostituibile senza toccare la logica di gioco. |
+| 6 | Sequenza | Gli step, in ordine:<br>**A.** test reale iPhone/iPad;<br>**B.** vertical slice;<br>**C.** coerenza dei 9 Elyon;<br>**D.** UI desktop, mobile e Steam Deck;<br>**E.** prima battaglia con i tre starter;<br>**F.** solo dopo, implementazione completa.<br>**Non** espandere il bestiario a 100 sprite definitivi. **Non** creare centinaia di asset prima dell'approvazione della slice. |
+
+### Stato della sequenza
+| Fase | Stato |
+|---|---|
+| A. Test reale iOS | **In attesa**: lo fa Giorgio sul Mac, con il registro `docs/test/TEST_IOS_REALE.md`. |
+| B. Vertical slice | **Pronta per la revisione**: `docs/VERTICAL_SLICE.md`, eseguibile `eclyra_slice`, 93 foto in `docs/design/vertical_slice/`. |
+| C. Coerenza dei 9 Elyon | Controlli automatici **superati** (`docs/design/verifica_elyon.md`). Resta da fare a mano l'icona 32×32 semplificata. |
+| D. UI desktop/mobile/Deck | Foto nei 3 formati pronte per la revisione; va provata dal vivo su telefono e Deck. |
+| E. Prima battaglia | Simulazioni e prova automatica superate. Registro dei test reali: `docs/test/TEST_PRIMA_LOTTA.md`. |
+| F. Implementazione completa | **Non iniziata**: attende A–E. |

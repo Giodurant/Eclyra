@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.4.2 — Vertical slice visiva
+
+Aggiunto
+- `slice/`: eseguibile `eclyra_slice`, separato dal gioco principale che non cambia. Usa la logica vera del gioco e la grafica del Design System v2.
+  - Contenuti: Lunaria, Route 1, lotte (selvatica, cattura, Kael), menu ufficiale, squadra, Scheda Elyon, zaino, scheda allenatore, Bestiario, Mappa di Asterra, dialoghi, evoluzione, titolo, scelta dello starter.
+  - Solo i 9 Elyon di riferimento.
+  - Input astratto (tastiera, controller, mouse, touch contestuale), canvas variabile, tour automatico di foto (`--tour`).
+- `tools/design/slice_export.py`: atlanti e font della slice, generati dagli stessi generatori dei mockup. Ci sono anche i personaggi in 4 direzioni.
+- `tools/design/valida_elyon.py`: verifica automatica della STYLE BIBLE sui 9 Elyon, con tavola di confronto.
+- `docs/VERTICAL_SLICE.md`, `docs/test/TEST_IOS_REALE.md`, `docs/test/TEST_PRIMA_LOTTA.md`, 93 foto di controllo in `docs/design/vertical_slice/`.
+
 ## 0.4.1 — Design v2 approvato, prima lotta di Kael, prototipo iOS
 
 Aggiunto
