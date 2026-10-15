@@ -22,6 +22,21 @@ if(APPLE)
   target_link_libraries(eclyra_slice PRIVATE "-framework IOKit" "-framework Cocoa" "-framework OpenGL")
 endif()
 
+if(EMSCRIPTEN)
+  # Versione web: pagina index.html + wasm, asset impacchettati in un unico file .data
+  set_target_properties(eclyra_slice PROPERTIES OUTPUT_NAME index SUFFIX ".html")
+  target_link_options(eclyra_slice PRIVATE
+    -sUSE_GLFW=3 -sALLOW_MEMORY_GROWTH=1 -sINITIAL_MEMORY=67108864 -sTOTAL_STACK=4194304
+    "SHELL:--preload-file ${CMAKE_SOURCE_DIR}/assets@/assets"
+    "SHELL:--preload-file ${CMAKE_CURRENT_SOURCE_DIR}/assets@/slice_assets"
+    "SHELL:--shell-file ${CMAKE_CURRENT_SOURCE_DIR}/web/shell.html")
+  target_compile_options(eclyra_slice PRIVATE -Wno-gnu-zero-variadic-macro-arguments)
+  set_property(TARGET eclyra_slice APPEND PROPERTY LINK_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/web/shell.html)
+  add_custom_command(TARGET eclyra_slice POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/web/static $<TARGET_FILE_DIR:eclyra_slice>)
+  return()
+endif()
+
 add_custom_command(TARGET eclyra_slice POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/assets $<TARGET_FILE_DIR:eclyra_slice>/assets
   COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/assets $<TARGET_FILE_DIR:eclyra_slice>/slice_assets)

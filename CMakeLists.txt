@@ -13,6 +13,9 @@ project(ECLYRA VERSION 0.1.0 LANGUAGES C)
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
+if(EMSCRIPTEN)
+  set(CMAKE_C_EXTENSIONS ON)   # EM_ASM (raylib web e pagina) richiede gnu99
+endif()
 
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   set(CMAKE_BUILD_TYPE Debug CACHE STRING "Debug o Release" FORCE)
@@ -22,7 +25,13 @@ endif()
 option(ECLYRA_DEBUG_TOOLS "Abilita gli strumenti di debug" ON)
 
 # ---------------------------------------------------------------- raylib
-find_package(raylib 5.0 QUIET)
+# Versione web (emscripten): si compila solo la vertical slice, con raylib per il browser.
+#   emcmake cmake -S . -B build-web -DCMAKE_BUILD_TYPE=Release && cmake --build build-web
+if(EMSCRIPTEN)
+  set(PLATFORM Web CACHE STRING "" FORCE)
+else()
+  find_package(raylib 5.0 QUIET)
+endif()
 if(NOT raylib_FOUND)
   include(FetchContent)
   set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
@@ -65,6 +74,11 @@ target_include_directories(eclyra_core PUBLIC src)
 target_compile_options(eclyra_core PRIVATE ${ECLYRA_WARN})
 if(NOT MSVC)
   target_link_libraries(eclyra_core PUBLIC m)
+endif()
+
+if(EMSCRIPTEN)
+  add_subdirectory(slice)
+  return()
 endif()
 
 # ---------------------------------------------------------------- gioco

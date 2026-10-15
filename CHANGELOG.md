@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.4.3 — Vertical slice nel browser
+
+Aggiunto
+- Versione web della slice (emscripten, WebAssembly) per provarla dal telefono senza installare niente:
+  - controlli touch automatici;
+  - schermo intero e orizzontale con GIOCA;
+  - avviso in verticale;
+  - icona per la schermata Home.
+- `.github/workflows/slice_web.yml`: compila e pubblica la slice su GitHub Pages a ogni push su `main`.
+- `docs/SLICE_WEB.md`: come pubblicarla e provarla.
+
+Corretto
+- Menu della slice: la riga sotto SALVA e OPZIONI usciva dal pannello; ora è «Non disponibile».
+- Menu della slice: «1 scoperto» al singolare.
+
 ## 0.4.2 — Vertical slice visiva
 
 Aggiunto

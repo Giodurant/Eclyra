@@ -13,7 +13,7 @@
 #include <string.h>
 
 typedef struct { const char *nome; Rectangle icona; } VoceMenu;
-static const char *SOTTO[7] = { "La tua squadra", "Oggetti e Core", NULL, "Asterra", "Il tuo profilo", "Non disponibile nella slice", "Non disponibile nella slice" };
+static const char *SOTTO[7] = { "La tua squadra", "Oggetti e Core", NULL, "Asterra", "Il tuo profilo", "Non disponibile", "Non disponibile" };
 
 static VoceMenu Voce(int i) {
     switch (i) {
@@ -174,7 +174,7 @@ static void DisegnaMenu(const Slice *s) {
         G_Icona(v.icona, x + 14, yy + 3);
         T_TestoOmbra(v.nome, x + 30, yy + 2, sel ? PAL_ORO[4] : spento ? PAL_GRIGIO_UI : PAL_CREMA);
         char sott[40];
-        if (i == 2) snprintf(sott, sizeof(sott), "%d scoperti", Scoperti(s));
+        if (i == 2) { int n = Scoperti(s); snprintf(sott, sizeof(sott), n == 1 ? "%d scoperto" : "%d scoperti", n); }
         else snprintf(sott, sizeof(sott), "%s", SOTTO[i]);
         for (char *p = sott; *p; p++) if (*p >= 'a' && *p <= 'z') *p -= 32;
         sott[22] = 0;

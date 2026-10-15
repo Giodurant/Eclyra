@@ -79,6 +79,6 @@ Confermate le decisioni su design, architettura e multipiattaforma.
 | A. Test reale iOS | **In attesa**: lo fa Giorgio sul Mac, con il registro `docs/test/TEST_IOS_REALE.md`. |
 | B. Vertical slice | **Pronta per la revisione**: `docs/VERTICAL_SLICE.md`, eseguibile `eclyra_slice`, 93 foto in `docs/design/vertical_slice/`. |
 | C. Coerenza dei 9 Elyon | Controlli automatici **superati** (`docs/design/verifica_elyon.md`). Resta da fare a mano l'icona 32×32 semplificata. |
-| D. UI desktop/mobile/Deck | Foto nei 3 formati pronte per la revisione; va provata dal vivo su telefono e Deck. |
+| D. UI desktop/mobile/Deck | Foto nei 3 formati pronte per la revisione; va provata dal vivo su telefono e Deck. Per il telefono c'è la versione web (`docs/SLICE_WEB.md`). |
 | E. Prima battaglia | Simulazioni e prova automatica superate. Registro dei test reali: `docs/test/TEST_PRIMA_LOTTA.md`. |
 | F. Implementazione completa | **Non iniziata**: attende A–E. |

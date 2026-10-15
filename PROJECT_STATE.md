@@ -18,6 +18,7 @@ In corso: validazione dei due rischi principali.
 - [x] Asset AI approvati, con provenienza obbligatoria: `docs/assets/provenienza.csv`, ASSET_SPEC §9.3.
 - [x] Prototipo iOS (raylib + SDL2) in `prototypes/ios_sdl/`. Prova automatica Linux superata: 20/20.
 - [x] Vertical slice visiva giocabile (`slice/`, `docs/VERTICAL_SLICE.md`) e verifica dei 9 Elyon (`tools/design/valida_elyon.py`).
+- [x] Slice nel browser per le prove su telefono: GitHub Pages via `.github/workflows/slice_web.yml`, istruzioni in `docs/SLICE_WEB.md`.
 - [ ] Sequenza di validazione (DECISIONI 2026-10-02):
   - A, test iOS reale: da fare;
   - B, slice: in revisione;

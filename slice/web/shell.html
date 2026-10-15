@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0B1026">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ECLYRA">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icona_192.png">
+<link rel="apple-touch-icon" href="icona_180.png">
+<title>ECLYRA · Vertical slice</title>
+<style>
+  /* Pagina della versione web della vertical slice: solo un contenitore per il canvas del gioco. */
+  html, body { margin: 0; height: 100%; background: #0B1026; overflow: hidden; overscroll-behavior: none; }
+  body { color: #F3EAD2; font: 16px/1.4 ui-monospace, Menlo, Consolas, monospace; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+  canvas#canvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; background: #000;
+                  image-rendering: pixelated; image-rendering: crisp-edges; touch-action: none; outline: none; }
+  .velo { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+          gap: 18px; background: #0B1026; text-align: center; padding: 16px; z-index: 2; }
+  .velo[hidden] { display: none; }
+  .velo img { width: min(370px, 70vw); image-rendering: pixelated; }
+  .barra { width: min(320px, 70vw); height: 8px; border: 2px solid #E0B04A; padding: 2px; }
+  .barra i { display: block; height: 100%; width: 0; background: #7FF2E2; }
+  #gioca { font: inherit; font-size: 18px; color: #0B1026; background: #E0B04A; border: 0; padding: 12px 28px;
+           box-shadow: 0 4px 0 #8A5A1C; cursor: pointer; letter-spacing: .08em; }
+  #gioca:focus-visible { outline: 3px solid #7FF2E2; outline-offset: 3px; }
+  .nota { color: #9AA4C8; font-size: 13px; max-width: 36ch; }
+  #ruota { z-index: 3; display: none; }
+  @media (orientation: portrait) and (pointer: coarse) { #ruota { display: flex; } }
+</style>
+</head>
+<body>
+<canvas id="canvas" tabindex="-1" oncontextmenu="event.preventDefault()"></canvas>
+
+<div class="velo" id="avvio">
+  <img src="logo.png" alt="ECLYRA">
+  <div class="barra" id="barra"><i id="riempi"></i></div>
+  <button id="gioca" hidden>GIOCA</button>
+  <p class="nota" id="nota">Caricamento…</p>
+</div>
+
+<div class="velo" id="ruota">
+  <img src="logo.png" alt="">
+  <p>Ruota il telefono in orizzontale</p>
+</div>
+
+<script>
+  var avvio = document.getElementById('avvio'), gioca = document.getElementById('gioca');
+  var nota = document.getElementById('nota'), riempi = document.getElementById('riempi');
+  var dito = window.matchMedia('(pointer: coarse)').matches;
+
+  // Il gioco parte subito sotto il velo; il pulsante serve a entrare a schermo intero
+  // (e, su Android, a bloccare l'orientamento orizzontale).
+  window.EclyraPronta = function () {
+    document.getElementById('barra').hidden = true;
+    gioca.hidden = false;
+    nota.textContent = dito ? 'Tocca GIOCA: si apre a schermo intero.'
+                            : 'Tastiera: frecce o WASD, Z conferma, X annulla, TAB menu. Va bene anche un controller.';
+    gioca.focus();
+  };
+  gioca.addEventListener('click', function () {
+    var el = document.documentElement;
+    if (dito && el.requestFullscreen) {
+      el.requestFullscreen({ navigationUI: 'hide' }).then(function () {
+        if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(function () {});
+      }).catch(function () {});
+    }
+    avvio.hidden = true;
+    document.getElementById('canvas').focus();
+  });
+
+  window.EclyraEsci = function () {
+    if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(function () {});
+    avvio.hidden = false;
+    gioca.focus();
+  };
+
+  var Module = {
+    canvas: document.getElementById('canvas'),
+    print: function (t) { console.log(t); },
+    printErr: function (t) { console.warn(t); },
+    setStatus: function (t) {
+      var m = t && t.match(/\((\d+(\.\d+)?)\/(\d+)\)/);
+      if (m) riempi.style.width = (100 * m[1] / m[3]) + '%';
+    },
+    onAbort: function () { nota.textContent = 'Errore durante l\'avvio. Ricarica la pagina.'; }
+  };
+  window.addEventListener('keydown', function (e) {
+    // le frecce e lo spazio non devono far scorrere la pagina
+    if ([32, 37, 38, 39, 40, 9].indexOf(e.keyCode) >= 0) e.preventDefault();
+  }, { passive: false });
+</script>
+{{{ SCRIPT }}}
+</body>
+</html>

@@ -38,6 +38,8 @@ cmake -S . -B build && cmake --build build -j
 ./build/slice/eclyra_slice --tour docs/design/vertical_slice   # foto automatiche di tutte le schermate
 ```
 
+**Dal telefono**: versione web su GitHub Pages, vedi `docs/SLICE_WEB.md`.
+
 Sul Mac basta CMake (`brew install cmake`); raylib si scarica da sola. Su Steam Deck si compila in modalità desktop (Linux).
 
 **Comandi**:

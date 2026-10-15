@@ -1,0 +1,51 @@
+# Vertical slice nel browser: compila la slice in WebAssembly e la pubblica su GitHub Pages.
+# Dopo il primo push: Settings > Pages > Build and deployment > Source = "GitHub Actions".
+# Indirizzo: https://<utente>.github.io/<repository>/
+name: slice-web
+on:
+  push:
+    branches: [main]
+    paths: ["slice/**", "src/**", "assets/**", "CMakeLists.txt", ".github/workflows/slice_web.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: 3.1.74
+          actions-cache-folder: emsdk-cache
+      - name: compila la slice per il browser
+        run: |
+          emcmake cmake -S . -B build-web -DCMAKE_BUILD_TYPE=Release
+          cmake --build build-web -j
+      - name: prepara il sito
+        run: |
+          mkdir -p sito
+          cp build-web/slice/index.html build-web/slice/index.js build-web/slice/index.wasm build-web/slice/index.data sito/
+          cp slice/web/static/* sito/
+          ls -la sito
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: sito
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.pubblica.outputs.page_url }}
+    steps:
+      - id: pubblica
+        uses: actions/deploy-pages@v4

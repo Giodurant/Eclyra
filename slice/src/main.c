@@ -17,6 +17,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#ifdef __EMSCRIPTEN__
+#include <emscripten/emscripten.h>
+#endif
 
 Slice S;
 void Shim_ImpostaCartellaGioco(const char *c);
@@ -144,7 +147,15 @@ static void PassoTitolo(Slice *s) {
     }
     if (in->conferma) {
         if (s->cursoreTitolo == 0) { s->scena = SC_STARTER; s->cursoreStarter = 0; }
-        else s->esci = true;
+        else {
+#ifdef __EMSCRIPTEN__
+            /* nel browser "Esci" torna alla schermata della pagina (ed esce dallo schermo intero) */
+            EM_ASM({ if (window.EclyraEsci) window.EclyraEsci(); });
+            s->cursoreTitolo = 0;
+#else
+            s->esci = true;
+#endif
+        }
     }
 }
 
@@ -203,12 +214,14 @@ static void PassoEvoluzione(Slice *s) {
 }
 
 static void Debug(Slice *s) {
+#ifndef __EMSCRIPTEN__
     if (!s->mobile) {
         if (IsKeyPressed(KEY_F1)) SetWindowSize(1280, 720);
         if (IsKeyPressed(KEY_F2)) SetWindowSize(1280, 800);
         if (IsKeyPressed(KEY_F3)) SetWindowSize(1560, 720);
         if (IsKeyPressed(KEY_F4)) SetWindowSize(1024, 768);
     }
+#endif
     if (IsKeyPressed(KEY_F9)) { s->az.forzaTouch = !s->az.forzaTouch; s->az.touchVisibile = s->az.forzaTouch; }
     if (s->scena != SC_MONDO || s->pannello != PAN_NESSUNO || !World_Libero(&s->world)) return;
     if (IsKeyPressed(KEY_F5)) {
@@ -305,6 +318,7 @@ void Slice_Frame(Slice *s) {
                    (Rectangle){ (float)c->offX, (float)c->offY, (float)(c->w * c->scale), (float)(c->h * c->scale) },
                    (Vector2){ 0, 0 }, 0, WHITE);
     EndDrawing();
+#ifndef __EMSCRIPTEN__
     if (IsKeyPressed(KEY_F12)) {
         static int n;
         Image im = LoadImageFromTexture(s->rt.texture);
@@ -312,7 +326,29 @@ void Slice_Frame(Slice *s) {
         ExportImage(im, TextFormat("slice_%02d.png", n++));
         UnloadImage(im);
     }
+#endif
 }
+
+/* ------------------------------------------------------------------ versione web */
+#ifdef __EMSCRIPTEN__
+/* Nel browser la finestra e' il canvas della pagina: segue la grandezza della finestra (anche
+ * quando il telefono ruota). Il telefono si riconosce dal puntatore "grossolano" (dito). */
+static bool WebMobile(void) {
+    return EM_ASM_INT({
+        var q = new URLSearchParams(window.location.search);
+        if (q.get('touch') === '0') return 0;
+        if (q.get('touch') === '1') return 1;
+        var dito = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+        return (dito && navigator.maxTouchPoints > 0) ? 1 : 0;
+    }) != 0;
+}
+
+static void FrameWeb(void) {
+    int w = EM_ASM_INT({ return window.innerWidth; }), h = EM_ASM_INT({ return window.innerHeight; });
+    if (w > 0 && h > 0 && (w != GetScreenWidth() || h != GetScreenHeight())) SetWindowSize(w, h);
+    Slice_Frame(&S);
+}
+#endif
 
 /* ------------------------------------------------------------------ main */
 
@@ -323,7 +359,7 @@ static const char *CartellaAccanto(const char *nome) {
     return nome;
 }
 
-int main(int argc, char **argv) {
+static int Avvia(int argc, char **argv) {
     const char *tour = NULL;
     bool touch = false;
     for (int i = 1; i < argc; i++) {
@@ -331,13 +367,21 @@ int main(int argc, char **argv) {
         else if (strcmp(argv[i], "--touch") == 0) touch = true;
     }
     SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
+#ifdef __EMSCRIPTEN__
+    SetTraceLogLevel(LOG_WARNING);
+#else
     SetTraceLogLevel(tour ? LOG_WARNING : LOG_INFO);
+#endif
     InitWindow(1280, 720, "ECLYRA - Vertical slice visiva");
     SetTargetFPS(60);
     SetExitKey(KEY_NULL);
 
     memset(&S, 0, sizeof(S));
+#ifdef __EMSCRIPTEN__
+    S.mobile = WebMobile();
+#else
     S.mobile = false;
+#endif
     Shim_ImpostaCartellaGioco(CartellaAccanto("assets"));
     char cs[620];
     snprintf(cs, sizeof(cs), "%s/", CartellaAccanto("slice_assets"));
@@ -353,6 +397,11 @@ int main(int argc, char **argv) {
     S.dissolvenza = 1.0f;
 
     int codice = 0;
+#ifdef __EMSCRIPTEN__
+    (void)tour;
+    EM_ASM({ if (window.EclyraPronta) window.EclyraPronta(); });
+    emscripten_set_main_loop(FrameWeb, 0, 1);   /* non ritorna */
+#endif
     if (tour) codice = Tour_Esegui(&S, tour);
     else while (!WindowShouldClose() && !S.esci) Slice_Frame(&S);
 
@@ -364,3 +413,9 @@ int main(int argc, char **argv) {
     CloseWindow();
     return codice;
 }
+
+#ifdef __EMSCRIPTEN__
+int main(void) { return Avvia(0, NULL); }   /* nel browser non ci sono argomenti (?touch=1 nell'indirizzo) */
+#else
+int main(int argc, char **argv) { return Avvia(argc, argv); }
+#endif
