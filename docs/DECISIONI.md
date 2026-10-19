@@ -82,3 +82,17 @@ Confermate le decisioni su design, architettura e multipiattaforma.
 | D. UI desktop/mobile/Deck | Foto nei 3 formati pronte per la revisione; va provata dal vivo su telefono e Deck. Per il telefono c'è la versione web (`docs/SLICE_WEB.md`). |
 | E. Prima battaglia | Simulazioni e prova automatica superate. Registro dei test reali: `docs/test/TEST_PRIMA_LOTTA.md`. |
 | F. Implementazione completa | **Non iniziata**: attende A–E. |
+
+---
+
+## 2026-10-19 — Rework degli starter
+
+| # | Tema | Decisione | Dove è applicata |
+|---|---|---|---|
+| 1 | Sprite di riferimento | I 9 sprite delle linee starter **vengono ridisegnati**. Sostituisce il punto 3 del 2026-10-02 solo per le immagini: **le regole della STYLE BIBLE §1–§12 restano valide** (misure, luce, toni, contorni, occhi, Lumen, silhouette). | `docs/design/REWORK_STARTER_PROPOSTA.md` |
+| 2 | Specie | Restano le specie canoniche del Design System §14: PYRIN **lince di brace**, AQUIL **lontra-pinna**, MOSSEN **cinghialino di muschio**. Dal concept di direzione si prendono palette, luce, espressività e personalità, **non l'anatomia** (le tre creature del concept condividono la stessa anatomia a volpe, vicina a un design esistente). | proposta §2.2, §4 |
+| 3 | Formato | Si resta a **64×64** (ASSET_SPEC §3). La versione 80×80 disegnata per il lato giocatore si valuta dopo la validazione. | proposta §2.3 |
+| 4 | Metodo | **Pixel art piazzata a mano** in sorgenti testuali riproducibili (`art_src/elyon/`), resi e controllati da script. Gli sprite procedurali attuali restano archiviati e recuperabili. | proposta §3 |
+| 5 | Concept | Il concept di direzione (`art_src/concept/starter_rework/`) è generato con ChatGPT: serve solo da ispirazione, non entra nel gioco, ed è registrato in `docs/assets/provenienza.csv`. | ASSET_SPEC §9.3 |
+
+Sequenza: si validano prima PYRIN, AQUIL e MOSSEN (riposo e animazione di riposo, tavola di verifica); le 6 evoluzioni solo dopo l'approvazione. Gameplay, statistiche, mosse, tipi, evoluzioni, Kael e architettura multipiattaforma non cambiano.

@@ -1,6 +1,6 @@
 # ECLYRA — Rework degli starter: analisi e proposta (Fasi A–B)
 
-**Stato**: PROPOSTA, in attesa di approvazione. Nessun file di gioco e nessuno sprite è stato modificato.
+**Stato**: APPROVATA il 2026-10-19 (`DECISIONI.md`): specie canoniche, 64×64, pixel art a mano. Concept generato con ChatGPT.
 Concept di direzione ricevuto: `art_src/concept/starter_rework/riferimento_direzione_2026-10-19.png`.
 
 ---
