@@ -205,7 +205,8 @@ def striscia(frames):
 # Elyon ridisegnati a mano (DECISIONI 2026-10-19): sorgenti in art_src/elyon/, resa con pixel_elyon.py.
 # Niente scale non intere: il foglio a 64 px e' posato nei riquadri da 70 (avversario) e 80 (giocatore)
 # con l'appoggio allineato a quello delle versioni procedurali, cosi' il codice della slice non cambia.
-DISEGNATI = {"PYRIN": "001_pyrin", "AQUIL": "004_aquil", "MOSSEN": "007_mossen"}
+DISEGNATI = {"PYRIN": "001_pyrin", "PYRION": "002_pyrion", "AQUIL": "004_aquil", "AQUILON": "005_aquilon",
+             "MOSSEN": "007_mossen", "MOSSKA": "008_mosska"}
 
 
 def sorgente_disegnato(nome):

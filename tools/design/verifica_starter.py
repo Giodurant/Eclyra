@@ -24,8 +24,9 @@ import ui                  # noqa: E402
 
 RADICE = X.RADICE
 OUT = os.path.join(RADICE, "docs", "design", "rework_starter")
-SORGENTI = ["001_pyrin", "004_aquil", "007_mossen"]
-FASCIA_APPOGGIO, FASCIA_INGOMBRO = (59, 60), (17, 28)
+SORGENTI = sorted(os.path.splitext(f)[0] for f in os.listdir(os.path.join(RADICE, "art_src", "elyon")) if f.endswith(".txt"))
+# STYLE BIBLE §1, §6, §7 per stadio: appoggio, ingombro (% di pixel opachi), raggio dell'alone del nodo di Lumen
+FASCE = {"base": ((59, 60), (17, 28), (2, 3)), "intermedio": ((60, 61), (29, 43), (3, 4)), "finale": ((61, 62), (42, 60), (3, 5))}
 
 
 def controlla(src, frames):
@@ -34,16 +35,18 @@ def controlla(src, frames):
     def chk(ok, testo):
         esito.append((bool(ok), testo))
 
+    stadio = src.meta["stadio"]
+    FASCIA_APPOGGIO, FASCIA_INGOMBRO, FASCIA_GEMMA = FASCE[stadio]
     im = frames[0]
     a = np.array(im).astype(int)
     al = a[..., 3]
     opaco = al == 255
     chk(im.size == (64, 64) and im.mode == "RGBA", f"PNG RGBA {im.size[0]}x{im.size[1]}, foglio {64 * len(frames)}x64")
     ys = np.nonzero(opaco.any(axis=1))[0]
-    chk(FASCIA_APPOGGIO[0] <= ys.max() <= FASCIA_APPOGGIO[1], f"appoggio a y={ys.max()} (fascia 59-60)")
+    chk(FASCIA_APPOGGIO[0] <= ys.max() <= FASCIA_APPOGGIO[1], f"stadio {stadio}: appoggio a y={ys.max()} (fascia {FASCIA_APPOGGIO[0]}-{FASCIA_APPOGGIO[1]})")
     chk(not opaco[63].any(), "riga 63 senza pixel opachi")
     cop = opaco.mean() * 100
-    chk(FASCIA_INGOMBRO[0] <= cop <= FASCIA_INGOMBRO[1], f"ingombro {cop:.0f}% (fascia 17-28%)")
+    chk(FASCIA_INGOMBRO[0] <= cop <= FASCIA_INGOMBRO[1], f"ingombro {cop:.0f}% (fascia {FASCIA_INGOMBRO[0]}-{FASCIA_INGOMBRO[1]}%)")
     xs = np.nonzero(opaco.any(axis=0))[0]
     chk(True, f"riquadro occupato {xs.max() - xs.min() + 1}x{ys.max() - ys.min() + 1} px")
     # alfa intermedia solo per ombra al suolo e aloni (fiamma, Lumen): mai su pixel del corpo
@@ -73,7 +76,7 @@ def controlla(src, frames):
     sclera = conta(im, P.H("F7F5FF")) + conta(im, P.H("C6CCE6"))
     chk(sclera >= 8 and conta(im, P.H("140F26")) >= 20, f"due occhi: {sclera} px di sclera")
     chk(conta(frames[2], P.H("F7F5FF")) == 0, "battito: occhi chiusi")
-    chk(src.gemme and all(2 <= h <= 3 for _, _, h in src.gemme), f"nodo di Lumen: {len(src.gemme)}, con alone")
+    chk(src.gemme and all(FASCIA_GEMMA[0] <= h <= FASCIA_GEMMA[1] for _, _, h in src.gemme), f"nodo di Lumen: {len(src.gemme)}, con alone")
     diversi = [not np.array_equal(np.array(frames[0]), np.array(f)) for f in frames[1:]]
     chk(all(diversi), "5 fotogrammi: riposo, respiro, battito, affondo, colpito (tutti diversi)")
     # icona 32x32 disegnata a mano (ASSET_SPEC §3): 2 fotogrammi, semplificata, al massimo 1 riflesso
@@ -81,7 +84,7 @@ def controlla(src, frames):
     ia = np.array(icone[0]).astype(int)
     iop = ia[..., 3] == 255
     fuori_i = {tuple(c) for c in ia[iop][:, :3]} - ammessi
-    riflessi = conta(icone[0], P.H("FFFFFF"))
+    riflessi = sum(r.count("H") for r in src.strati.get("icona dettagli", []))   # riflessi messi a mano
     chk(icone[0].size == (32, 32) and len(icone) == 2 and not fuori_i and riflessi <= 1
         and 28 <= np.nonzero(iop.any(axis=1))[0].max() <= 30 and not iop[31].any(),
         f"icona 32x32 disegnata, 2 fotogrammi, palette dichiarata, {riflessi} riflesso")
@@ -143,7 +146,7 @@ def main():
         righe.append(f"| {src.meta['nome']} (`{file_png}`) | {'OK' if ok else 'DA CORREGGERE'} | "
                      + "<br>".join(("" if e[0] else "**NO** ") + e[1] for e in esito) + " |")
         dati.append((src.meta["nome"], M.elyon(src.meta["nome"]), frames))
-        sagome.append((src.meta["nome"], opaco))
+        sagome.append((src.meta["nome"], opaco, src.meta["stadio"]))
         # animazione di riposo: riposo e respiro alternati (500 ms), battito ogni tanto
         seq = [frames[0], frames[1]] * 3 + [frames[2], frames[1]]
         big = []
@@ -156,6 +159,8 @@ def main():
     # sagome: sovrapposizione (IoU) fra coppie, allineate al punto d'appoggio
     for i in range(len(sagome)):
         for j in range(i + 1, len(sagome)):
+            if sagome[i][2] != sagome[j][2]:
+                continue
             a, b = sagome[i][1], sagome[j][1]
             iou = (a & b).sum() / max(1, (a | b).sum())
             # informativo: la STYLE BIBLE chiede sagome riconoscibili, ma non fissa una soglia numerica

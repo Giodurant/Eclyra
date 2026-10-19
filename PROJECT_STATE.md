@@ -19,7 +19,8 @@ In corso: validazione dei due rischi principali.
 - [x] Prototipo iOS (raylib + SDL2) in `prototypes/ios_sdl/`. Prova automatica Linux superata: 20/20.
 - [x] Vertical slice visiva giocabile (`slice/`, `docs/VERTICAL_SLICE.md`) e verifica dei 9 Elyon (`tools/design/valida_elyon.py`).
 - [x] Rework degli starter (DECISIONI 2026-10-19), prima versione: PYRIN, AQUIL, MOSSEN disegnati a mano in `art_src/elyon/`, integrati in slice e gioco. Stato e foto: `docs/design/rework_starter/README.md`.
-- [ ] Rework: revisione di Giorgio; poi le 6 evoluzioni (fase G) e l'eventuale versione 80×80 per il lato giocatore.
+- [x] Rework, fase G (prima parte): PYRION, AQUILON, MOSSKA disegnati a mano e integrati.
+- [ ] Rework: revisione di Giorgio; poi i 3 stadi finali (PYROVAR, AQUARYS, VERDANTOR) e l'eventuale versione 80×80 per il lato giocatore.
 - [x] Slice nel browser per le prove su telefono: GitHub Pages via `.github/workflows/slice_web.yml`, istruzioni in `docs/SLICE_WEB.md`.
 - [ ] Sequenza di validazione (DECISIONI 2026-10-02):
   - A, test iOS reale: da fare;

@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.4.5 — Rework degli starter: stadi intermedi
+
+Cambiato
+- PYRION, AQUILON e MOSSKA ridisegnati a mano con lo stesso metodo degli starter, integrati in slice (anche nella scena dell'evoluzione) e nelle celle 002, 005 e 008 del gioco principale.
+  - PYRION: lince adolescente slanciata, criniera di brace (3 ciuffi animati), bracciali d'ottone, coda-fiamma più grande.
+  - AQUILON: lontra lunga dal collo alto, pinne più ampie, coda sollevata con pinna a due lobi e prime stelle (annuncio del tipo ASTRALE).
+  - MOSSKA: cinghiale giovane con manto di muschio, tre felci, fiorellini e spalla di pietra.
+- `verifica_starter.py` controlla tutti i sorgenti di `art_src/elyon/` con le fasce della STYLE BIBLE per stadio.
+
 ## 0.4.4 — Rework degli starter (prima versione)
 
 Cambiato
