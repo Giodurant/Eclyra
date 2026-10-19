@@ -7,6 +7,8 @@
 - AQUIL → AQUILON → AQUARYS;
 - MOSSEN → MOSSKA → VERDANTOR.
 
+**Aggiornamento 2026-10-19** (`DECISIONI.md`, rework degli starter): le **regole** restano tutte valide; cambiano le immagini e il metodo. Gli stadi base PYRIN, AQUIL e MOSSEN sono ora **disegnati a mano** (`art_src/elyon/`, tavola `docs/design/rework_starter/verifica.png`) e sostituiscono come riferimento i rispettivi sprite procedurali. Le 6 evoluzioni restano quelle procedurali finché non vengono ridisegnate.
+
 Gli altri 91 Elyon **derivano da queste regole**: non imitano "a occhio" lo stile. Ogni regola qui sotto è misurata sui 9 sprite. Le regole in **grassetto** sono verificate dal validatore (ASSET_SPEC §10); le altre dalla checklist umana (§12).
 
 ---
@@ -168,11 +170,15 @@ Fiamme, scintille e alone del nodo possono animarsi nei fotogrammi di riposo e r
 
 ## 11. Come si produce un nuovo Elyon
 
-1. **Scheda procedurale** in `elyon_design.py`: forme, materiali, occhi, nodo e taglia per stadio. Garantisce luce, contorni, occhi e taglia per costruzione.
-2. **Concept generativo** (facoltativo) per idee di forma, con il modello di prompt di ASSET_SPEC §9.1. Serve solo a ispirare la scheda o la rifinitura.
-3. **Rifinitura manuale** in LibreSprite, Pixelorama o Aseprite: dettagli, tratto distintivo, icona 32×32.
-4. **Confronto affiancato** con la tavola di riferimento: stessa taglia per stadio, stessa luce, stessi occhi.
-5. **Validatore** + checklist (§12) + registro di provenienza. Poi import.
+Metodo in vigore dal 2026-10-19:
+
+1. **Concept** (facoltativo, anche generativo) per palette, atmosfera e idee di forma: solo ispirazione, mai anatomia copiata. Va in `art_src/concept/` e nel registro di provenienza.
+2. **Sorgente disegnato a mano** `art_src/elyon/<nnn>_<nome>.txt`: mappa delle parti (un carattere per pixel), materiali, ritocchi (occhi, bocca, nodo di Lumen), occhi chiusi, eventuali emissivi animati, icona 32×32. Si modifica carattere per carattere o passando da un editor (LibreSprite, Pixelorama, Aseprite).
+3. **Resa** con `tools/design/pixel_elyon.py`: luce dall'alto a sinistra in 4 toni per gruppo di forma, linee interne, contorno colorato, ombra al suolo, aloni, i 5 fotogrammi e l'icona. I ritocchi a mano hanno l'ultima parola.
+4. **Confronto affiancato** con gli altri Elyon della linea e del tipo: stessa taglia per stadio, stessa luce, stessi occhi.
+5. **Verifica** (`tools/design/verifica_starter.py`, da estendere a tutti gli Elyon) + checklist (§12) + registro di provenienza. Poi import.
+
+Le schede procedurali (`elyon_design.py`) restano per gli Elyon non ancora ridisegnati.
 
 Ordine di produzione: le linee che servono prima nella storia (ASSET_SPEC §12), un tipo nuovo alla volta, così il primo Elyon di ogni tipo conferma i motivi della §9.
 

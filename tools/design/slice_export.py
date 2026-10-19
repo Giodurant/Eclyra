@@ -202,9 +202,35 @@ def striscia(frames):
     return out
 
 
+# Elyon ridisegnati a mano (DECISIONI 2026-10-19): sorgenti in art_src/elyon/, resa con pixel_elyon.py.
+# Niente scale non intere: il foglio a 64 px e' posato nei riquadri da 70 (avversario) e 80 (giocatore)
+# con l'appoggio allineato a quello delle versioni procedurali, cosi' il codice della slice non cambia.
+DISEGNATI = {"PYRIN": "001_pyrin", "AQUIL": "004_aquil", "MOSSEN": "007_mossen"}
+
+
+def sorgente_disegnato(nome):
+    import pixel_elyon as PX
+    return PX.Sorgente(os.path.join(RADICE, "art_src", "elyon", DISEGNATI[nome] + ".txt"))
+
+
+def _posa(f, lato, dx, dy, specchio=False):
+    out = nuovo(lato, lato)
+    out.alpha_composite(f.transpose(Image.FLIP_LEFT_RIGHT) if specchio else f, (dx, dy))
+    return out
+
+
 def esporta_elyon():
+    import pixel_elyon as PX
     A = Atlante("elyon", 1024)
     for nome in SPECIE_SLICE:
+        if nome in DISEGNATI:
+            src = sorgente_disegnato(nome)
+            fr = PX.fotogrammi(src)
+            A.aggiungi(nome + "_fronte", striscia(fr))                                              # 64 px
+            A.aggiungi(nome + "_nemico", striscia([_posa(f, 70, 3, 6) for f in fr]))                # 64 px in 70
+            A.aggiungi(nome + "_mio", striscia([_posa(f, 80, 8, 16, True) for f in fr]))            # 64 px in 80
+            A.aggiungi(nome + "_icona", striscia(PX.fotogrammi_icona(src)))                         # icona disegnata
+            continue
         A.aggiungi(nome + "_fronte", striscia(fotogrammi(nome)))                                   # 64 px (Bestiario, Scheda)
         A.aggiungi(nome + "_nemico", striscia(fotogrammi(nome, 1.1)))                              # 70 px, lato avversario
         A.aggiungi(nome + "_mio", striscia([f.transpose(Image.FLIP_LEFT_RIGHT) for f in fotogrammi(nome, 1.25)]))   # 80 px
@@ -554,7 +580,8 @@ def esporta_titolo():
         h = 186 + int(6 * math.sin((x - 200) * 0.03)) - (x - 200) // 12
         vline(im, x, h, 240 - h, P.H("080A1C"))
     W.personaggio(im, 336, 140, W.ABITO_GIOCATORE)
-    im.alpha_composite(M.elyon("PYRIN", scala=0.5), (310, 136))
+    import pixel_elyon as PX
+    im.alpha_composite(PX.fotogrammi_icona(sorgente_disegnato("PYRIN"))[0], (310, 136))
     im.save(os.path.join(OUT, "titolo.png"))
     M.LW, M.LH = 320, 180
 

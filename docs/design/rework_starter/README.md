@@ -1,7 +1,11 @@
-# Rework degli starter — Fasi C e D (prima versione, in attesa di approvazione)
+# Rework degli starter — Fasi C–F
 
-**Stato**: prima versione di PYRIN, AQUIL e MOSSEN, con animazione di riposo. **Non ancora integrata nel gioco**:
-`slice/assets/` e `assets/sprites/` non sono cambiati.
+**Stato** (2026-10-19): PYRIN, AQUIL e MOSSEN disegnati a mano, con animazione di riposo e icona 32×32 disegnata.
+**Integrati** nella slice (`slice/assets/elyon.png`, `titolo.png`) e nelle celle 001/004/007 dei fogli del gioco
+principale. Versione precedente archiviata in `art_src/archivio/2026-10-19_starter_procedurali/`.
+Le loro evoluzioni nella slice sono ancora quelle procedurali (fase G).
+
+Fase E (correzioni): gorgiera di PYRIN più morbida (non più a "dentini"), icone 32×32 disegnate a mano.
 
 ## File
 
@@ -22,6 +26,5 @@ Gli screenshot vengono da una build **locale e temporanea** della slice (non pub
 - Gli sprite sono a 64×64 su entrambi i lati della lotta, senza ingrandimenti a scala non intera. Per questo il lato giocatore
   appare più piccolo di prima (prima: 80 px ottenuti ridisegnando le forme procedurali). Rimedio previsto: la versione
   80×80 disegnata (ASSET_SPEC §3), da decidere.
-- La colonna 32×32 della tavola è una riduzione di prova: l'icona vera va disegnata a mano (fase E o F).
 - La sovrapposizione delle sagome è riportata come numero, non come esito: la STYLE BIBLE chiede sagome riconoscibili
   ma non fissa una soglia.

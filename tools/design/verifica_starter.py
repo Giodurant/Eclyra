@@ -76,6 +76,15 @@ def controlla(src, frames):
     chk(src.gemme and all(2 <= h <= 3 for _, _, h in src.gemme), f"nodo di Lumen: {len(src.gemme)}, con alone")
     diversi = [not np.array_equal(np.array(frames[0]), np.array(f)) for f in frames[1:]]
     chk(all(diversi), "5 fotogrammi: riposo, respiro, battito, affondo, colpito (tutti diversi)")
+    # icona 32x32 disegnata a mano (ASSET_SPEC §3): 2 fotogrammi, semplificata, al massimo 1 riflesso
+    icone = X.fotogrammi_icona(src)
+    ia = np.array(icone[0]).astype(int)
+    iop = ia[..., 3] == 255
+    fuori_i = {tuple(c) for c in ia[iop][:, :3]} - ammessi
+    riflessi = conta(icone[0], P.H("FFFFFF"))
+    chk(icone[0].size == (32, 32) and len(icone) == 2 and not fuori_i and riflessi <= 1
+        and 28 <= np.nonzero(iop.any(axis=1))[0].max() <= 30 and not iop[31].any(),
+        f"icona 32x32 disegnata, 2 fotogrammi, palette dichiarata, {riflessi} riflesso")
     return esito, cop, opaco
 
 
@@ -104,8 +113,10 @@ def tavola(righe_dati):
         chiaro = Image.new("RGBA", (cella, cella), P.PERGAMENA[2])
         chiaro.alpha_composite(sagoma(frames[0]))
         t.alpha_composite(chiaro, (x + 2 * (cella + 6), y + 10))
-        F.micro(t, "32X32 (PROVA)", x, y + 10 + cella + 8, P.GRIGIO_UI)
-        t.alpha_composite(frames[0].resize((32, 32), Image.NEAREST), (x, y + 10 + cella + 16))
+        F.micro(t, "ICONA 32X32", x, y + 10 + cella + 8, P.GRIGIO_UI)
+        ico = X.fotogrammi_icona(X.Sorgente(os.path.join(RADICE, "art_src", "elyon", SORGENTI[r] + ".txt")))[0]
+        t.alpha_composite(ico, (x, y + 10 + cella + 16))
+        t.alpha_composite(ico.resize((64, 64), Image.NEAREST), (x + 40, y + 10 + cella + 16))
         x4 = x + 3 * (cella + 6)
         F.micro(t, f"{nome} 4X", x4, y, P.ORO[3])
         t.alpha_composite(frames[0].resize((cella * Z, cella * Z), Image.NEAREST), (x4, y + 10))
@@ -152,7 +163,7 @@ def main():
                          f"sovrapposizione delle sagome {iou * 100:.0f}% (stesso riquadro e appoggio; giudizio a occhio sulla tavola) |")
     righe += ["", f"Esito complessivo: **{'tutti i controlli superati' if errori == 0 else f'{errori} controlli da correggere'}**.",
               "", "Restano alla revisione umana: originalità, espressione, leggibilità su telefono e Deck,",
-              "icona 32×32 disegnata a mano (la colonna 32×32 della tavola è solo una prova ridotta).", ""]
+              "versione 80×80 per il lato giocatore (non ancora decisa).", ""]
     with open(os.path.join(OUT, "verifica.md"), "w", encoding="utf-8") as f:
         f.write("\n".join(righe))
     tv = tavola(dati)

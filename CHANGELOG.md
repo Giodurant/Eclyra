@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.4.4 — Rework degli starter (prima versione)
+
+Cambiato
+- PYRIN, AQUIL e MOSSEN ridisegnati a mano (DECISIONI 2026-10-19): lince di brace, lontra-pinna, cinghialino di muschio, con silhouette diverse (a V, orizzontale, a cupola) e animazione di riposo.
+  - Nella slice: atlante degli Elyon (fronte, avversario, giocatore, icona disegnata) e fondale del titolo. Coordinate dell'atlante invariate, nessuna modifica al codice C.
+  - Nel gioco principale: celle 001, 004 e 007 di `elyon_fronte.png` / `elyon_retro.png` (il retro è lo specchio del profilo).
+  - Gli sprite procedurali precedenti sono archiviati in `art_src/archivio/2026-10-19_starter_procedurali/`.
+
+Aggiunto
+- `art_src/elyon/*.txt`: sorgenti di pixel art modificabili carattere per carattere (sprite 64×64 e icona 32×32).
+- `tools/design/pixel_elyon.py`: resa dei sorgenti con le regole della STYLE BIBLE (luce, contorni, ombra, 5 fotogrammi, icona).
+- `tools/design/verifica_starter.py`: controlli automatici e tavola in `docs/design/rework_starter/`.
+
 ## 0.4.3 — Vertical slice nel browser
 
 Aggiunto

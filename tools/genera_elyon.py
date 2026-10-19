@@ -13,6 +13,7 @@ Sono asset sostituibili: la UI legge solo due fogli 640x640 (griglia 10x10 di 64
 Genera:
   assets/sprites/elyon_fronte.png   vista frontale di 3/4 (nemico, rivolto a sinistra)
   assets/sprites/elyon_retro.png    vista da dietro (Elyon del giocatore, rivolto a destra)
+Gli Elyon con un sorgente disegnato a mano in art_src/elyon/ usano quello (vedi disegnati_a_mano).
 
 Uso: python3 tools/genera_elyon.py [--anteprima file.png]   (richiede Pillow)
 """
@@ -357,6 +358,22 @@ def sprite(e, vista):
     return im
 
 
+def disegnati_a_mano(fronte, retro):
+    """Gli Elyon gia' ridisegnati a mano (art_src/elyon/, DECISIONI 2026-10-19) sostituiscono la cella
+    procedurale: fronte = riposo; 'retro' = specchio del profilo (Design System v2: niente vista da dietro)."""
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), "design"))
+    import glob
+    import pixel_elyon as px
+    for percorso in sorted(glob.glob(os.path.join(os.path.dirname(__file__), "..", "art_src", "elyon", "*.txt"))):
+        src = px.Sorgente(percorso)
+        sid = int(src.meta["numero"])
+        riposo = px.rendi(src, "riposo")
+        gx, gy = (sid - 1) % 10 * S, (sid - 1) // 10 * S
+        for foglio, im in ((fronte, riposo), (retro, riposo.transpose(Image.FLIP_LEFT_RIGHT))):
+            foglio.paste((0, 0, 0, 0), (gx, gy, gx + S, gy + S))
+            foglio.paste(im, (gx, gy))
+
+
 def main():
     specie = db.carica_specie()
     evo = db.carica_evoluzioni(specie)
@@ -375,6 +392,7 @@ def main():
         gx, gy = (sid - 1) % 10 * S, (sid - 1) // 10 * S
         fronte.paste(sprite(e, "fronte"), (gx, gy))
         retro.paste(sprite(e, "retro"), (gx, gy))
+    disegnati_a_mano(fronte, retro)
     fronte.save(os.path.join(RADICE, "elyon_fronte.png"))
     retro.save(os.path.join(RADICE, "elyon_retro.png"))
     print("scritti elyon_fronte.png e elyon_retro.png (640x640, griglia 10x10 di 64x64)")
